@@ -5,7 +5,7 @@ namespace Hikipuro.Text {
 	/// トークンのマッチした場所.
 	/// </summary>
 	/// <typeparam name="TokenType">トークンの種類.</typeparam>
-	class TokenMatch<TokenType> where TokenType : struct {
+	public class TokenMatch<TokenType> where TokenType : struct {
 		/// <summary>
 		/// トークンの種類.
 		/// </summary>

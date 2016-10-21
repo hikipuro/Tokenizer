@@ -9,31 +9,17 @@ namespace Hikipuro.Text {
 	/// 文字列をトークンに分割するためのクラス.
 	/// </summary>
 	/// <typeparam name="TokenType">トークンの種類.</typeparam>
-	class Tokenizer<TokenType> where TokenType : struct {
-		/// <summary>
-		/// リストにトークンを追加する直前に呼ばれるイベントのデリゲート.
-		/// </summary>
-		/// <param name="tokenMatch">トークンのマッチした場所を表すオブジェクト.</param>
-		/// <returns>true: リストに追加する, false: リストに追加しない.</returns>
-		public delegate bool BeforeAddTokenEventHandler(TokenMatch<TokenType> tokenMatch);
-
-		/// <summary>
-		/// リストにトークンが追加された直後に呼ばれるイベントのデリゲート.
-		/// </summary>
-		/// <param name="tokens">処理中のトークンのリスト.</param>
-		/// <param name="token">追加されたトークンオブジェクト.</param>
-		public delegate void AddTokenEventHandler(TokenList<TokenType> tokens, Token<TokenType> token);
-
+	public class Tokenizer<TokenType> where TokenType : struct {
 		/// <summary>
 		/// リストにトークンを追加する直前に呼ばれるイベント.
 		/// イベントハンドラ内で true を返すと追加, false を返すと追加しない.
 		/// </summary>
-		public event BeforeAddTokenEventHandler BeforeAddToken;
+		public event BeforeAddTokenEventHandler<TokenType> BeforeAddToken;
 
 		/// <summary>
 		/// リストにトークンが追加された直後に呼ばれるイベント.
 		/// </summary>
-		public event AddTokenEventHandler AddToken;
+		public event TokenAddedEventHandler<TokenType> TokenAdded;
 
 		/// <summary>
 		/// タイムアウト時間 (ミリ秒).
@@ -201,8 +187,8 @@ namespace Hikipuro.Text {
 				}
 
 				// 追加後イベントを実行する
-				if (AddToken != null) {
-					AddToken(tokens, tokens[tokens.Count - 1]);
+				if (TokenAdded != null) {
+					TokenAdded(tokens, tokens[tokens.Count - 1]);
 				}
 
 				// ループの開始位置で改行文字が見つかった時

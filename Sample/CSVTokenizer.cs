@@ -66,7 +66,7 @@ namespace Tokenizer.Sample {
 			};
 
 			// リストにトークンを追加した直後に発生するイベント
-			tokenizer.AddToken += (TokenList<TokenType> tokenList, Token<TokenType> token) => {
+			tokenizer.TokenAdded += (TokenList<TokenType> tokenList, Token<TokenType> token) => {
 				/*
 				// デバッグ用
 				Console.WriteLine(

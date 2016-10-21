@@ -3,7 +3,7 @@
 	/// トークン 1 つ分.
 	/// </summary>
 	/// <typeparam name="TokenType">トークンの種類.</typeparam>
-	class Token<TokenType> where TokenType : struct {
+	public class Token<TokenType> where TokenType : struct {
 		/// <summary>
 		/// トークンの種類.
 		/// </summary>

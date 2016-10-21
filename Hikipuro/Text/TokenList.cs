@@ -6,7 +6,7 @@ namespace Hikipuro.Text {
 	/// 分解された文字列全体が, ここにリストとして保存される.
 	/// </summary>
 	/// <typeparam name="TokenType">トークンの種類.</typeparam>
-	class TokenList<TokenType> : List<Token<TokenType>> where TokenType : struct {
+	public class TokenList<TokenType> : List<Token<TokenType>> where TokenType : struct {
 		/// <summary>
 		/// TokenMatch オブジェクトを Token オブジェクトに変換してから追加する.
 		/// </summary>
