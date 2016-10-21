@@ -15,6 +15,9 @@
 - Visual Studio で Tokenizer.sln を開いてください
 - "開始" ボタンを押すと、CSV ファイルの分解サンプルが実行されます
 
+より詳しい使い方
+- [(C#) 字句解析ツールを作ってみた - ひきぷろのプログラミング日記](http://hikipuro.hatenadiary.jp/entry/2016/10/21/130835)
+
 ## 備考
 
 - [Sample/CSVTokenizer.cs](Sample/CSVTokenizer.cs) に、 CSV ファイルの分解サンプルがあります
