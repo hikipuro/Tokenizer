@@ -75,7 +75,11 @@ namespace Hikipuro.Text {
 		/// </summary>
 		public Tokenizer() {
 			patterns = new List<TokenPattern<TokenType>>();
+			#if UNITY_5 || UNITY_5_3_OR_NEWER
+			newLineRegex = new Regex("\r\n|\r|\n", RegexOptions.None);
+			#else
 			newLineRegex = new Regex("\r\n|\r|\n", RegexOptions.Compiled);
+			#endif
 			timer = CreateTimeoutTimer();
 		}
 

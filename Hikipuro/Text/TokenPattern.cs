@@ -29,7 +29,11 @@ namespace Hikipuro.Text {
 		public TokenPattern(TokenType type, string pattern) {
 			this.Type = type;
 			this.Pattern = pattern;
-			CompileRegex();
+			#if UNITY_5 || UNITY_5_3_OR_NEWER
+			CompileRegex(RegexOptions.None);
+			#else
+			CompileRegex(RegexOptions.Compiled);
+			#endif
 		}
 
 		/// <summary>
@@ -48,7 +52,7 @@ namespace Hikipuro.Text {
 		/// Pattern 文字列を正規表現に変換する.
 		/// </summary>
 		/// <param name="options">正規表現のオプション.</param>
-		private void CompileRegex(RegexOptions options = RegexOptions.Compiled) {
+		private void CompileRegex(RegexOptions options) {
 			Regex regex = new Regex(Pattern, options);
 			this.Regex = regex;
 		}
