@@ -17,8 +17,8 @@
 
 ## 備考
 
-- Sample/CSVTokenizer.cs に、 CSV ファイルの分解サンプルがあります
-- 今のところクラスライブラリにはしていないので、ほかのところで使う場合は Hikipuro/Test 内のファイルをコピーしてください
+- [Sample/CSVTokenizer.cs](Sample/CSVTokenizer.cs) に、 CSV ファイルの分解サンプルがあります
+- 今のところクラスライブラリにはしていないので、ほかのところで使う場合は [Hikipuro/Text](Hikipuro/Text) 内のファイルをコピーしてください
 
 ## サンプルファイル提供
 
