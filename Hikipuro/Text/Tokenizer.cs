@@ -68,7 +68,7 @@ namespace Hikipuro.Text {
 		/// 正規表現で無限ループになってしまう時があるため.
 		/// TODO: Timer クラスを System.Threading.Timer にするかどうか考える.
 		/// </summary>
-		Timer timer = new Timer();
+		Timer timer;
 
 		/// <summary>
 		/// コンストラクタ.
@@ -76,6 +76,27 @@ namespace Hikipuro.Text {
 		public Tokenizer() {
 			patterns = new List<TokenPattern<TokenType>>();
 			newLineRegex = new Regex("\r\n|\r|\n", RegexOptions.Compiled);
+			timer = CreateTimeoutTimer();
+		}
+
+		/// <summary>
+		/// デストラクタ.
+		/// </summary>
+		~Tokenizer() {
+			if (timer != null) {
+				timer.Dispose();
+				timer = null;
+			}
+			if (patterns != null) {
+				patterns.Clear();
+				patterns = null;
+			}
+			foreach (Delegate d in BeforeAddToken.GetInvocationList()) {
+				BeforeAddToken -= (BeforeAddTokenEventHandler<TokenType>)d;
+			}
+			foreach (Delegate d in TokenAdded.GetInvocationList()) {
+				TokenAdded -= (TokenAddedEventHandler<TokenType>)d;
+			}
 		}
 
 		/// <summary>
@@ -159,8 +180,8 @@ namespace Hikipuro.Text {
 			int loopCount = 0;
 
 			// タイムアウトのチェック
-			timer = CreateTimeoutTimer(timeout);
-			if (timer != null) {
+			if (timeout > 0) {
+				timer.Interval = timeout;
 				timer.Start();
 			}
 
@@ -206,9 +227,7 @@ namespace Hikipuro.Text {
 			}
 
 			// タイムアウトチェック用のタイマーを停止する
-			if (timer != null) {
-				timer.Stop();
-			}
+			timer.Stop();
 
 			return tokens;
 		}
@@ -266,19 +285,13 @@ namespace Hikipuro.Text {
 
 		/// <summary>
 		/// タイムアウトチェック用のタイマーを作成する.
-		/// timeout 引数が 0 以下の場合は null を返す.
 		/// </summary>
-		/// <param name="timeout">タイムアウト時間 (ミリ秒).</param>
 		/// <returns>タイマーオブジェクト.</returns>
-		private Timer CreateTimeoutTimer(int timeout) {
-			if (timeout <= 0) {
-				return null;
-			}
+		private Timer CreateTimeoutTimer() {
 			Timer timer = new Timer();
 			timer.Elapsed += (object sender, ElapsedEventArgs e) => {
 				ThrowTimeout();
 			};
-			timer.Interval = timeout;
 			return timer;
 		}
 
