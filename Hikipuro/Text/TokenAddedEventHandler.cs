@@ -2,7 +2,8 @@
 	/// <summary>
 	/// リストにトークンが追加された直後に呼ばれるイベントのデリゲート.
 	/// </summary>
-	/// <param name="tokens">処理中のトークンのリスト.</param>
-	/// <param name="token">追加されたトークンオブジェクト.</param>
+	/// <typeparam name="TokenType">トークンの種類.</typeparam>
+	/// <param name="sender">イベントの送信元.</param>
+	/// <param name="e">イベントの引数.</param>
 	public delegate void TokenAddedEventHandler<TokenType>(object sender, TokenAddedEventArgs<TokenType> e) where TokenType : struct;
 }

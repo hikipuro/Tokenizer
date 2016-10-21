@@ -4,6 +4,7 @@ namespace Hikipuro.Text {
 	/// <summary>
 	/// TokenAddedEventHandler の引数.
 	/// </summary>
+	/// <typeparam name="TokenType">トークンの種類.</typeparam>
 	public class TokenAddedEventArgs<TokenType> : EventArgs where TokenType : struct {
 		/// <summary>
 		/// 処理中のトークンのリスト.
@@ -11,7 +12,7 @@ namespace Hikipuro.Text {
 		public TokenList<TokenType> tokenList;
 
 		/// <summary>
-		/// 追加されたトークンオブジェクト.
+		/// 追加されたトークン.
 		/// </summary>
 		public Token<TokenType> token;
 
@@ -19,7 +20,7 @@ namespace Hikipuro.Text {
 		/// コンストラクタ.
 		/// </summary>
 		/// <param name="tokenList">処理中のトークンのリスト.</param>
-		/// <param name="token">追加されたトークンオブジェクト.</param>
+		/// <param name="token">追加されたトークン.</param>
 		public TokenAddedEventArgs(TokenList<TokenType> tokenList, Token<TokenType> token) {
 			this.tokenList = tokenList;
 			this.token = token;

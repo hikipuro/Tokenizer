@@ -37,7 +37,7 @@ namespace Tokenizer.Sample {
 			tokenizer.AddPattern(TokenType.String, @"""((?<=\\)""|[^\r\n""])*""");
 
 			// リストにトークンを追加する直前に発生するイベント
-			// - 戻り値 true で追加, false で追加しない
+			// - e.cancel = true; で追加しない
 			tokenizer.BeforeAddToken += (object sender, BeforeAddTokenEventArgs<TokenType> e) => {
 				/*
 				if (e.tokenMatch.type == TokenType.NewLine) {

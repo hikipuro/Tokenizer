@@ -12,7 +12,7 @@ namespace Hikipuro.Text {
 	public class Tokenizer<TokenType> where TokenType : struct {
 		/// <summary>
 		/// リストにトークンを追加する直前に呼ばれるイベント.
-		/// イベントハンドラ内で true を返すと追加, false を返すと追加しない.
+		/// イベントハンドラ内で e.cancel = true; を設定したトークンは追加しない.
 		/// </summary>
 		public event BeforeAddTokenEventHandler<TokenType> BeforeAddToken;
 
