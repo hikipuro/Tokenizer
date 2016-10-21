@@ -127,8 +127,12 @@ namespace Tokenizer.Sample {
 					JsonNewLine(stringBuilder, indentSize - 1);
 					continue;
 				}
-				// 文字列
-				if (token.Type == JsonTokenType.String) {
+				// 文字列, 数値, null, true, false
+				if (token.Type == JsonTokenType.String
+				|| token.Type == JsonTokenType.Number
+				|| token.Type == JsonTokenType.Null
+				|| token.Type == JsonTokenType.True
+				|| token.Type == JsonTokenType.False) {
 					Token<JsonTokenType> next = tokens.Next(token);
 					if (next.Type == JsonTokenType.CloseBrace
 					|| next.Type == JsonTokenType.CloseBracket) {

@@ -16,6 +16,9 @@ namespace Tokenizer.Sample {
 			CloseBrace,
 			OpenBracket,
 			CloseBracket,
+			Null,
+			True,
+			False,
 			Number,
 			String,
 			Space
@@ -38,6 +41,9 @@ namespace Tokenizer.Sample {
 			tokenizer.AddPattern(TokenType.CloseBrace, "}");
 			tokenizer.AddPattern(TokenType.OpenBracket, @"\[");
 			tokenizer.AddPattern(TokenType.CloseBracket, @"\]");
+			tokenizer.AddPattern(TokenType.Null, "null");
+			tokenizer.AddPattern(TokenType.True, "true");
+			tokenizer.AddPattern(TokenType.False, "false");
 			tokenizer.AddPattern(TokenType.Number, @"\d+[.]?\d*");
 			tokenizer.AddPattern(TokenType.String, @"""((?<=\\)""|[^\r\n""])*""");
 			tokenizer.AddPattern(TokenType.Space, @"\s+");

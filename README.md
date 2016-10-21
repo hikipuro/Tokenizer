@@ -13,7 +13,8 @@
 ## 使い方
 
 - Visual Studio で Tokenizer.sln を開いてください
-- "開始" ボタンを押すと、CSV ファイルの分解サンプルが実行されます
+- "CSVファイルのロード" ボタンを押すと、CSV ファイルの分解サンプルが実行されます
+- "JSONファイルのロード" ボタンを押すと、JSON ファイルの分解サンプルが実行されます
 
 より詳しい使い方
 - [(C#) 字句解析ツールを作ってみた - ひきぷろのプログラミング日記](http://hikipuro.hatenadiary.jp/entry/2016/10/21/130835)
@@ -26,3 +27,4 @@
 ## サンプルファイル提供
 
 - Sample/CSV/13TOKYO.CSV: [郵便局のサイト](http://www.post.japanpost.jp/zipcode/dl/oogaki-zip.html) からお借りしました
+- Sample/JSON/*.json: [JSON Example](http://json.org/example.html) からお借りしました
