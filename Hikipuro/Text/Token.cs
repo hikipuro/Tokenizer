@@ -37,6 +37,13 @@ namespace Hikipuro.Text {
 		public TokenList<TokenType> TokenList;
 
 		/// <summary>
+		/// タグ.
+		/// ユーザー側でトークンに目印を付けるために使用する.
+		/// ライブラリ側では値をセットしない.
+		/// </summary>
+		public object Tag;
+
+		/// <summary>
 		/// 加工前のマッチした文字列.
 		/// </summary>
 		string rawText;
@@ -116,6 +123,7 @@ namespace Hikipuro.Text {
 		/// </summary>
 		~Token() {
 			TokenList = null;
+			Tag = null;
 		}
 
 		/// <summary>
