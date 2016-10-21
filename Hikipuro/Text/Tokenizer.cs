@@ -169,7 +169,7 @@ namespace Hikipuro.Text {
 				// 登録されたパターンでマッチを試す
 				TokenMatch<TokenType> tokenMatch = TryMatchToken(text);
 
-				// マッチしなかった場合
+				// マッチしなかった時は, 例外を投げる
 				if (tokenMatch == null) {
 					ThrowParseError(lineNumber, lineIndex);
 				}
@@ -178,17 +178,12 @@ namespace Hikipuro.Text {
 				if (BeforeAddToken != null) {
 					// 追加前イベントが登録されている場合は実行する
 					// false が返ってきた場合はトークンリストに追加しない
-					if (BeforeAddToken(tokenMatch)) {
-						tokens.Add(tokenMatch);
+					if (BeforeAddToken(tokenMatch) == true) {
+						AddToken(tokens, tokenMatch);
 					}
 				} else {
 					// トークンをリストに追加する
-					tokens.Add(tokenMatch);
-				}
-
-				// 追加後イベントを実行する
-				if (TokenAdded != null) {
-					TokenAdded(tokens, tokens[tokens.Count - 1]);
+					AddToken(tokens, tokenMatch);
 				}
 
 				// ループの開始位置で改行文字が見つかった時
@@ -287,6 +282,20 @@ namespace Hikipuro.Text {
 				return false;
 			}
 			return match.Index == index;
+		}
+
+		/// <summary>
+		/// リストにトークンを追加する.
+		/// </summary>
+		/// <param name="tokens">追加先のリスト.</param>
+		/// <param name="tokenMatch">追加するマッチオブジェクト.</param>
+		private void AddToken(TokenList<TokenType> tokens, TokenMatch<TokenType> tokenMatch) {
+			tokens.Add(tokenMatch);
+
+			// 追加後イベントを実行する
+			if (TokenAdded != null) {
+				TokenAdded(tokens, tokens[tokens.Count - 1]);
+			}
 		}
 
 		/// <summary>
