@@ -16,13 +16,18 @@
 - "CSVファイルのロード" ボタンを押すと、CSV ファイルの分解サンプルが実行されます
 - "JSONファイルのロード" ボタンを押すと、JSON ファイルの分解サンプルが実行されます
 
+古いバージョンの Visual Studio で開く場合
+- Tokenizer(vs2010).sln を開いてください
+- Visual Studio 2010 以降に対応しています
+
 より詳しい使い方
 - [(C#) 字句解析ツールを作ってみた - ひきぷろのプログラミング日記](http://hikipuro.hatenadiary.jp/entry/2016/10/21/130835)
 
 ## 備考
 
-- [Sample/CSVTokenizer.cs](Sample/CSVTokenizer.cs) に、 CSV ファイルの分解サンプルがあります
-- 今のところクラスライブラリにはしていないので、ほかのところで使う場合は [Hikipuro/Text](Hikipuro/Text) 内のファイルをコピーしてください
+- CSV ファイルのサンプルコード: [Sample/CSVTokenizer.cs](Sample/CSVTokenizer.cs)
+- JSON ファイルのサンプルコード: [Sample/JsonTokenizer.cs](Sample/JsonTokenizer.cs)
+- 今のところクラスライブラリにはしていないので、ほかのプロジェクトから使用する場合は [Hikipuro/Text](Hikipuro/Text) 内のファイルをコピーしてください
 
 ## サンプルファイル提供
 
