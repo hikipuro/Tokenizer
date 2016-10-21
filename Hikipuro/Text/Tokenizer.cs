@@ -25,6 +25,7 @@ namespace Hikipuro.Text {
 		/// タイムアウト時間 (ミリ秒).
 		/// デフォルト値: 10 秒.
 		/// 処理が長時間に及ぶ場合はタイムアウト例外を発生させる.
+		/// 0 以下の値を入れるとタイムアウトしないようになる.
 		/// </summary>
 		public int timeout = 10000;
 
@@ -158,8 +159,10 @@ namespace Hikipuro.Text {
 			int loopCount = 0;
 
 			// タイムアウトのチェック
-			timer = CreateTimeoutTimer();
-			timer.Start();
+			timer = CreateTimeoutTimer(timeout);
+			if (timer != null) {
+				timer.Start();
+			}
 
 			// テキストの終わりまでマッチを試す
 			while (index < text.Length) {
@@ -201,8 +204,12 @@ namespace Hikipuro.Text {
 					}
 				}
 			}
+
 			// タイムアウトチェック用のタイマーを停止する
-			timer.Stop();
+			if (timer != null) {
+				timer.Stop();
+			}
+
 			return tokens;
 		}
 
@@ -259,9 +266,14 @@ namespace Hikipuro.Text {
 
 		/// <summary>
 		/// タイムアウトチェック用のタイマーを作成する.
+		/// timeout 引数が 0 以下の場合は null を返す.
 		/// </summary>
-		/// <returns></returns>
-		private Timer CreateTimeoutTimer() {
+		/// <param name="timeout">タイムアウト時間 (ミリ秒).</param>
+		/// <returns>タイマーオブジェクト.</returns>
+		private Timer CreateTimeoutTimer(int timeout) {
+			if (timeout <= 0) {
+				return null;
+			}
 			Timer timer = new Timer();
 			timer.Elapsed += (object sender, ElapsedEventArgs e) => {
 				ThrowTimeout();
