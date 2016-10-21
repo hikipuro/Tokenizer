@@ -27,6 +27,36 @@ namespace Hikipuro.Text {
 		}
 
 		/// <summary>
+		/// 引数で指定されたトークンの 1 つ次の要素を取得する.
+		/// リストの端に達した場合は巡回する.
+		/// 要素の数が 0 の場合は null を返す.
+		/// </summary>
+		/// <param name="token">トークン.</param>
+		/// <returns>1 つ次の要素.</returns>
+		public Token<TokenType> Next(Token<TokenType> token) {
+			if (Count <= 0) {
+				return null;
+			}
+			int index = IndexOf(token);
+			return this[(index + 1) == Count ? 0 : (index + 1)];
+		}
+
+		/// <summary>
+		/// 引数で指定されたトークンの 1 つ前の要素を取得する.
+		/// リストの端に達した場合は巡回する.
+		/// 要素の数が 0 の場合は null を返す.
+		/// </summary>
+		/// <param name="token">トークン.</param>
+		/// <returns>1 つ前の要素.</returns>
+		public Token<TokenType> Prev(Token<TokenType> token) {
+			if (Count <= 0) {
+				return null;
+			}
+			int index = IndexOf(token);
+			return this[(index - 1) == -1 ? Count - 1 : (index - 1)];
+		}
+
+		/// <summary>
 		/// 2 つのトークン間の距離を, トークンの数で取得する.
 		/// 同じトークン: 0, 隣接しているトークン: 1.
 		/// TODO: IndexOf() が遅そうなので, 高速化する.
