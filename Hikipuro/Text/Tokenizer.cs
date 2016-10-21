@@ -202,7 +202,10 @@ namespace Hikipuro.Text {
 				if (BeforeAddToken != null) {
 					// 追加前イベントが登録されている場合は実行する
 					// false が返ってきた場合はトークンリストに追加しない
-					if (BeforeAddToken(tokenMatch) == true) {
+					BeforeAddTokenEventArgs<TokenType> args
+						= new BeforeAddTokenEventArgs<TokenType>(tokenMatch);
+					BeforeAddToken(this, args);
+					if (args.cancel == false) {
 						AddToken(tokens, tokenMatch);
 					}
 				} else {
@@ -312,14 +315,17 @@ namespace Hikipuro.Text {
 		/// <summary>
 		/// リストにトークンを追加する.
 		/// </summary>
-		/// <param name="tokens">追加先のリスト.</param>
+		/// <param name="tokenList">追加先のリスト.</param>
 		/// <param name="tokenMatch">追加するマッチオブジェクト.</param>
-		private void AddToken(TokenList<TokenType> tokens, TokenMatch<TokenType> tokenMatch) {
-			tokens.Add(tokenMatch);
+		private void AddToken(TokenList<TokenType> tokenList, TokenMatch<TokenType> tokenMatch) {
+			tokenList.Add(tokenMatch);
 
 			// 追加後イベントを実行する
 			if (TokenAdded != null) {
-				TokenAdded(tokens, tokens[tokens.Count - 1]);
+				Token<TokenType> token = tokenList[tokenList.Count - 1];
+				TokenAddedEventArgs<TokenType> args
+					= new TokenAddedEventArgs<TokenType>(tokenList, token);
+				TokenAdded(this, args);
 			}
 		}
 
@@ -340,7 +346,10 @@ namespace Hikipuro.Text {
 		/// Timeout 例外を発生させる.
 		/// </summary>
 		private void ThrowTimeout() {
-			throw new TimeoutException("Timeout: Tokenizer.Tokenize()");
+			throw new TimeoutException(string.Format(
+				"Timeout: Tokenizer.Tokenize() (Timeout:{0})",
+				timeout
+			));
 		}
 	}
 }

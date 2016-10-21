@@ -38,15 +38,16 @@ namespace Tokenizer.Sample {
 
 			// リストにトークンを追加する直前に発生するイベント
 			// - 戻り値 true で追加, false で追加しない
-			tokenizer.BeforeAddToken += (TokenMatch<TokenType> tokenMatch) => {
+			tokenizer.BeforeAddToken += (object sender, BeforeAddTokenEventArgs<TokenType> e) => {
 				/*
-				if (tokenMatch.type == TokenType.NewLine) {
-					return false;
+				if (e.tokenMatch.type == TokenType.NewLine) {
+					e.cancel = true;
+					return;
 				}
 				//*/
 
 				// 文字列にマッチした場合
-				if (tokenMatch.type == TokenType.String) {
+				if (e.tokenMatch.type == TokenType.String) {
 					/*
 					// デバッグ用
 					Console.WriteLine(
@@ -57,18 +58,17 @@ namespace Tokenizer.Sample {
 					);
 					//*/
 					// 前後からダブルクォートを取り除く
-					string matchText = tokenMatch.text;
+					string matchText = e.tokenMatch.text;
 					matchText = matchText.Trim('"');
-					tokenMatch.text = matchText;
+					e.tokenMatch.text = matchText;
 				}
-
-				return true;
 			};
 
 			// リストにトークンを追加した直後に発生するイベント
-			tokenizer.TokenAdded += (TokenList<TokenType> tokenList, Token<TokenType> token) => {
+			tokenizer.TokenAdded += (object sender, TokenAddedEventArgs<TokenType> e) => {
 				/*
 				// デバッグ用
+				Token<TokenType> token = e.token;
 				Console.WriteLine(
 					"token: {0} ({1},{2}): {3}: {4}",
 					token.index,
