@@ -119,6 +119,27 @@ namespace Hikipuro.Text {
 		}
 
 		/// <summary>
+		/// このトークンが, 引数で指定された種類と一致するかチェックする.
+		/// </summary>
+		/// <param name="tokenType">トークンの種類.</param>
+		/// <returns>true: 一致, false: 一致しない.</returns>
+		public bool IsTypeOf(TokenType tokenType) {
+			return Type.Equals(tokenType);
+		}
+
+		/// <summary>
+		/// このトークンが, 引数で指定されたグループに属するかチェックする.
+		/// </summary>
+		/// <param name="tokenTypeGroup">チェックするグループ.</param>
+		/// <returns>true: 属している, false: 属していない.</returns>
+		public bool IsMemberOf(TokenTypeGroup<TokenType> tokenTypeGroup) {
+			if (tokenTypeGroup == null) {
+				return false;
+			}
+			return tokenTypeGroup.Contains(Type);
+		}
+
+		/// <summary>
 		/// 開始位置同士の距離を文字数で取得する.
 		/// </summary>
 		/// <param name="token">比較用のトークン.</param>

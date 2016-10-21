@@ -94,28 +94,28 @@ namespace Tokenizer.Sample {
 			StringBuilder stringBuilder = new StringBuilder();
 			foreach (Token<JsonTokenType> token in tokens) {
 				// コロン
-				if (token.Type == JsonTokenType.Colon) {
+				if (token.IsTypeOf(JsonTokenType.Colon)) {
 					stringBuilder.Append(token.Text);
 					stringBuilder.Append(" ");
 					continue;
 				}
 				// カンマ
-				if (token.Type == JsonTokenType.Comma) {
+				if (token.IsTypeOf(JsonTokenType.Comma)) {
 					stringBuilder.Append(token.Text);
 					JsonNewLine(stringBuilder, indentSize);
 					continue;
 				}
 				// 波括弧 { または 角括弧 [
-				if (openBlockGroup.Contains(token.Type)) {
+				if (token.IsMemberOf(openBlockGroup)) {
 					indentSize++;
 					stringBuilder.Append(token.Text);
 					JsonNewLine(stringBuilder, indentSize);
 					continue;
 				}
 				// 波括弧 } または 角括弧 ]
-				if (closeBlockGroup.Contains(token.Type)) {
+				if (token.IsMemberOf(closeBlockGroup)) {
 					indentSize--;
-					if (token.Next.Type == JsonTokenType.Comma) {
+					if (token.Next.IsTypeOf(JsonTokenType.Comma)) {
 						stringBuilder.Append(token.Text);
 						continue;
 					}
@@ -124,7 +124,7 @@ namespace Tokenizer.Sample {
 					continue;
 				}
 				// 文字列, 数値, null, true, false
-				if (closeBlockGroup.Contains(token.Next.Type)) {
+				if (token.Next.IsMemberOf(closeBlockGroup)) {
 					stringBuilder.Append(token.Text);
 					JsonNewLine(stringBuilder, indentSize - 1);
 					continue;
