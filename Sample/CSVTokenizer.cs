@@ -1,4 +1,5 @@
 ﻿using Hikipuro.Text;
+using System;
 
 namespace Tokenizer.Sample {
 	/// <summary>
@@ -14,6 +15,7 @@ namespace Tokenizer.Sample {
 			NewLine,
 			Number,
 			String,
+			// EOF,
 		}
 
 		/// <summary>
@@ -45,10 +47,19 @@ namespace Tokenizer.Sample {
 
 				// 文字列にマッチした場合
 				if (tokenMatch.type == TokenType.String) {
+					/*
+					// デバッグ用
+					Console.WriteLine(
+						"token: {0} ({1},{2}): {3}: {4}",
+						tokenMatch.index,
+						tokenMatch.lineNumber, tokenMatch.lineIndex,
+						tokenMatch.type, tokenMatch.text
+					);
+					*/
 					// 前後からダブルクォートを取り除く
-					string value = tokenMatch.value;
-					value = value.Trim('"');
-					tokenMatch.value = value;
+					string matchText = tokenMatch.text;
+					matchText = matchText.Trim('"');
+					tokenMatch.text = matchText;
 				}
 
 				return true;

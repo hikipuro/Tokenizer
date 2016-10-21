@@ -12,6 +12,12 @@ namespace Hikipuro.Text {
 		public TokenType type;
 
 		/// <summary>
+		/// マッチした文字列.
+		/// BeforeAddToken イベントの中で修正できる.
+		/// </summary>
+		public string text;
+
+		/// <summary>
 		/// 文字列の位置.
 		/// </summary>
 		public int index;
@@ -22,15 +28,14 @@ namespace Hikipuro.Text {
 		public int lineNumber;
 
 		/// <summary>
+		/// 行の文字位置.
+		/// </summary>
+		public int lineIndex;
+
+		/// <summary>
 		/// 正規表現の Match オブジェクト.
 		/// マッチしなかった場合は null.
 		/// </summary>
 		public Match match;
-
-		/// <summary>
-		/// マッチした文字列.
-		/// BeforeAddToken イベントの中で修正できる.
-		/// </summary>
-		public string value;
 	}
 }
