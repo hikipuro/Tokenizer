@@ -74,6 +74,17 @@ namespace Tokenizer.Sample {
 			string text = reader.ReadToEnd();
 			reader.Close();
 
+			// トークンの種類分けをしておく
+			TokenTypeGroup<JsonTokenType> openBlockGroup
+				= new TokenTypeGroup<JsonTokenizer.TokenType>();
+			openBlockGroup.Add(JsonTokenType.OpenBrace);
+			openBlockGroup.Add(JsonTokenType.OpenBracket);
+
+			TokenTypeGroup<JsonTokenType> closeBlockGroup
+				= new TokenTypeGroup<JsonTokenizer.TokenType>();
+			closeBlockGroup.Add(JsonTokenType.CloseBrace);
+			closeBlockGroup.Add(JsonTokenType.CloseBracket);
+
 			// CSV ファイルを分解する
 			TokenList<JsonTokenType> tokens = JsonTokenizer.Tokenize(text);
 
@@ -94,52 +105,29 @@ namespace Tokenizer.Sample {
 					JsonNewLine(stringBuilder, indentSize);
 					continue;
 				}
-				// 波括弧 {
-				if (token.Type == JsonTokenType.OpenBrace) {
+				// 波括弧 { または 角括弧 [
+				if (openBlockGroup.Contains(token.Type)) {
 					indentSize++;
 					stringBuilder.Append(token.Text);
 					JsonNewLine(stringBuilder, indentSize);
 					continue;
 				}
-				// 波括弧 }
-				if (token.Type == JsonTokenType.CloseBrace) {
+				// 波括弧 } または 角括弧 ]
+				if (closeBlockGroup.Contains(token.Type)) {
 					indentSize--;
-					Token<JsonTokenType> next = tokens.Next(token);
-					if (next.Type == JsonTokenType.Comma) {
+					if (token.Next.Type == JsonTokenType.Comma) {
 						stringBuilder.Append(token.Text);
 						continue;
 					}
-					stringBuilder.Append(token.Text);
-					JsonNewLine(stringBuilder, indentSize - 1);
-					continue;
-				}
-				// 角括弧 [
-				if (token.Type == JsonTokenType.OpenBracket) {
-					indentSize++;
-					stringBuilder.Append(token.Text);
-					JsonNewLine(stringBuilder, indentSize);
-					continue;
-				}
-				// 角括弧 ]
-				if (token.Type == JsonTokenType.CloseBracket) {
-					indentSize--;
 					stringBuilder.Append(token.Text);
 					JsonNewLine(stringBuilder, indentSize - 1);
 					continue;
 				}
 				// 文字列, 数値, null, true, false
-				if (token.Type == JsonTokenType.String
-				|| token.Type == JsonTokenType.Number
-				|| token.Type == JsonTokenType.Null
-				|| token.Type == JsonTokenType.True
-				|| token.Type == JsonTokenType.False) {
-					Token<JsonTokenType> next = tokens.Next(token);
-					if (next.Type == JsonTokenType.CloseBrace
-					|| next.Type == JsonTokenType.CloseBracket) {
-						stringBuilder.Append(token.Text);
-						JsonNewLine(stringBuilder, indentSize - 1);
-						continue;
-					}
+				if (closeBlockGroup.Contains(token.Next.Type)) {
+					stringBuilder.Append(token.Text);
+					JsonNewLine(stringBuilder, indentSize - 1);
+					continue;
 				}
 				stringBuilder.Append(token.Text);
 			}

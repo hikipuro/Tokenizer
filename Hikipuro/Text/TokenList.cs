@@ -9,11 +9,28 @@ namespace Hikipuro.Text {
 	/// <typeparam name="TokenType">トークンの種類.</typeparam>
 	public class TokenList<TokenType> : List<Token<TokenType>> where TokenType : struct {
 		/// <summary>
+		/// Token オブジェクトを追加する.
+		/// </summary>
+		/// <param name="token"></param>
+		public new void Add(Token<TokenType> token) {
+			if (token == null) {
+				return;
+			}
+			token.TokenList = this;
+			Add(token);
+		}
+
+		/// <summary>
 		/// TokenMatch オブジェクトを Token オブジェクトに変換してから追加する.
 		/// </summary>
 		/// <param name="tokenMatch">トークンのマッチした場所を表すオブジェクト.</param>
 		public void Add(TokenMatch<TokenType> tokenMatch) {
-			Add(Token<TokenType>.FromTokenMatch(tokenMatch));
+			if (tokenMatch == null) {
+				return;
+			}
+			Token<TokenType> token = Token<TokenType>.FromTokenMatch(tokenMatch);
+			token.TokenList = this;
+			base.Add(token);
 		}
 
 		/// <summary>

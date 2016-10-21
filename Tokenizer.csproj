@@ -46,6 +46,7 @@
     <Compile Include="Hikipuro\Text\BeforeAddTokenEventHandler.cs" />
     <Compile Include="Hikipuro\Text\TokenAddedEventArgs.cs" />
     <Compile Include="Hikipuro\Text\TokenAddedEventHandler.cs" />
+    <Compile Include="Hikipuro\Text\TokenTypeGroup.cs" />
     <Compile Include="Sample\CSVTokenizer.cs" />
     <Compile Include="Sample\Form1.cs">
       <SubType>Form</SubType>

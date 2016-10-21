@@ -32,6 +32,11 @@ namespace Hikipuro.Text {
 		public int LineIndex;
 
 		/// <summary>
+		/// 追加されたリスト.
+		/// </summary>
+		public TokenList<TokenType> TokenList;
+
+		/// <summary>
 		/// 加工前のマッチした文字列.
 		/// </summary>
 		string rawText;
@@ -48,6 +53,32 @@ namespace Hikipuro.Text {
 		/// </summary>
 		public int Length {
 			get { return Text.Length; }
+		}
+
+		/// <summary>
+		/// 1 つ次の要素を取得する.
+		/// </summary>
+		/// <returns>1 つ次の要素.</returns>
+		public Token<TokenType> Next {
+			get {
+				if (TokenList == null) {
+					return null;
+				}
+				return TokenList.Next(this);
+			}
+		}
+
+		/// <summary>
+		/// 1 つ前の要素を取得する.
+		/// </summary>
+		/// <returns>1 つ前の要素.</returns>
+		public Token<TokenType> Prev {
+			get {
+				if (TokenList == null) {
+					return null;
+				}
+				return TokenList.Prev(this);
+			}
 		}
 
 		/// <summary>
@@ -78,6 +109,13 @@ namespace Hikipuro.Text {
 		public Token(string text) {
 			rawText = text;
 			this.Text = text;
+		}
+
+		/// <summary>
+		/// デストラクタ.
+		/// </summary>
+		~Token() {
+			TokenList = null;
 		}
 
 		/// <summary>
