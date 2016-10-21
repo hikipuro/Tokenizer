@@ -3,14 +3,14 @@
 namespace Hikipuro.Text {
 	/// <summary>
 	/// トークンのリスト.
-	/// ソースコード全体がここにリストとして保存される.
+	/// 分解された文字列全体が, ここにリストとして保存される.
 	/// </summary>
-	/// <typeparam name="TokenType"></typeparam>
+	/// <typeparam name="TokenType">トークンの種類.</typeparam>
 	class TokenList<TokenType> : List<Token<TokenType>> where TokenType : struct {
 		/// <summary>
 		/// TokenMatch オブジェクトを Token オブジェクトに変換してから追加する.
 		/// </summary>
-		/// <param name="tokenMatch"></param>
+		/// <param name="tokenMatch">トークンのマッチした場所を表すオブジェクト.</param>
 		public void Add(TokenMatch<TokenType> tokenMatch) {
 			Add(Token<TokenType>.FromTokenMatch(tokenMatch));
 		}

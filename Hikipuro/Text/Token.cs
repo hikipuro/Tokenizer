@@ -2,7 +2,7 @@
 	/// <summary>
 	/// トークン 1 つ分.
 	/// </summary>
-	/// <typeparam name="TokenType"></typeparam>
+	/// <typeparam name="TokenType">トークンの種類.</typeparam>
 	class Token<TokenType> where TokenType : struct {
 		/// <summary>
 		/// トークンの種類.
@@ -15,12 +15,12 @@
 		public string text;
 
 		/// <summary>
-		/// 文字列の位置.
+		/// マッチした文字列の位置.
 		/// </summary>
 		public int index;
 
 		/// <summary>
-		/// 行番号.
+		/// マッチした文字列の行番号.
 		/// </summary>
 		public int lineNumber;
 

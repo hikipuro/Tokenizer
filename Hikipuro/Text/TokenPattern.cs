@@ -4,7 +4,7 @@ namespace Hikipuro.Text {
 	/// <summary>
 	/// トークンのマッチ用パターン.
 	/// </summary>
-	/// <typeparam name="TokenType"></typeparam>
+	/// <typeparam name="TokenType">トークンの種類.</typeparam>
 	class TokenPattern<TokenType> where TokenType : struct {
 		/// <summary>
 		/// トークンの種類.
@@ -47,9 +47,8 @@ namespace Hikipuro.Text {
 		/// <summary>
 		/// pattern 文字列を正規表現に変換する.
 		/// </summary>
-		/// <param name="options"></param>
+		/// <param name="options">正規表現のオプション.</param>
 		private void CompileRegex(RegexOptions options = RegexOptions.Compiled) {
-			//RegexOptions option = RegexOptions.Compiled;
 			Regex regex = new Regex(pattern, options);
 			this.regex = regex;
 		}

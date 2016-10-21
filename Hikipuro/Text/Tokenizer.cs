@@ -8,20 +8,32 @@ namespace Hikipuro.Text {
 	/// <summary>
 	/// 文字列をトークンに分割するためのクラス.
 	/// </summary>
-	/// <typeparam name="TokenType"></typeparam>
+	/// <typeparam name="TokenType">トークンの種類.</typeparam>
 	class Tokenizer<TokenType> where TokenType : struct {
 		/// <summary>
-		/// トークンのリストに追加する直前に呼ばれるイベントのデリゲート.
+		/// リストにトークンを追加する直前に呼ばれるイベントのデリゲート.
 		/// </summary>
-		/// <param name="tokenMatch"></param>
-		/// <returns></returns>
+		/// <param name="tokenMatch">トークンのマッチした場所を表すオブジェクト.</param>
+		/// <returns>true: リストに追加する, false: リストに追加しない.</returns>
 		public delegate bool BeforeAddTokenEventHandler(TokenMatch<TokenType> tokenMatch);
 
 		/// <summary>
-		/// トークンのリストに追加する直前に呼ばれるイベント.
+		/// リストにトークンが追加された直後に呼ばれるイベントのデリゲート.
+		/// </summary>
+		/// <param name="tokens">処理中のトークンのリスト.</param>
+		/// <param name="token">追加されたトークンオブジェクト.</param>
+		public delegate void AddTokenEventHandler(TokenList<TokenType> tokens, Token<TokenType> token);
+
+		/// <summary>
+		/// リストにトークンを追加する直前に呼ばれるイベント.
 		/// イベントハンドラ内で true を返すと追加, false を返すと追加しない.
 		/// </summary>
 		public event BeforeAddTokenEventHandler BeforeAddToken;
+
+		/// <summary>
+		/// リストにトークンが追加された直後に呼ばれるイベント.
+		/// </summary>
+		public event AddTokenEventHandler AddToken;
 
 		/// <summary>
 		/// タイムアウト時間 (ミリ秒).
@@ -55,14 +67,14 @@ namespace Hikipuro.Text {
 		int index = 0;
 
 		/// <summary>
-		/// 処理中の行の文字位置.
-		/// </summary>
-		int lineIndex = 0;
-
-		/// <summary>
 		/// 処理中の行番号.
 		/// </summary>
 		int lineNumber = 1;
+
+		/// <summary>
+		/// 処理中の行の文字位置.
+		/// </summary>
+		int lineIndex = 0;
 
 		/// <summary>
 		/// タイムアウトの処理用.
@@ -120,10 +132,10 @@ namespace Hikipuro.Text {
 		}
 
 		/// <summary>
-		/// 引数で指定したトークンの種類がパターンに追加されているかチェックする.
+		/// 引数で指定したトークンの種類が, パターンに追加されているかチェックする.
 		/// </summary>
 		/// <param name="type">トークンの種類.</param>
-		/// <returns>すでに追加されている: true, 追加されていない: false.</returns>
+		/// <returns>true: すでに追加されている, false: 追加されていない.</returns>
 		public bool HasPatternType(TokenType type) {
 			foreach (TokenPattern<TokenType> pattern in patterns) {
 				if (pattern.type.Equals(type)) {
@@ -135,13 +147,13 @@ namespace Hikipuro.Text {
 
 		/// <summary>
 		/// 登録されたパターンを使ってトークンに分割する.
-		/// 失敗した場合, "Parse Error" を例外として投げる (Exception クラス).
+		/// マッチに失敗した場合, "Parse Error" を例外として投げる (Exception クラス).
 		/// 処理が長時間に及ぶ場合, "Timeout" を例外として投げる (Exception クラス).
 		/// タイムアウト時間は, timeout 変数で変更する.
 		/// TODO: 独自の Parse Error を作るか検討する.
 		/// </summary>
 		/// <param name="text">処理対象の文字列.</param>
-		/// <returns></returns>
+		/// <returns>トークンのリスト.</returns>
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public TokenList<TokenType> Tokenize(string text) {
 			if (text == null || text == string.Empty) {
@@ -186,6 +198,11 @@ namespace Hikipuro.Text {
 				} else {
 					// トークンをリストに追加する
 					tokens.Add(tokenMatch);
+				}
+
+				// 追加後イベントを実行する
+				if (AddToken != null) {
+					AddToken(tokens, tokens[tokens.Count - 1]);
 				}
 
 				// ループの開始位置で改行文字が見つかった時
@@ -233,9 +250,8 @@ namespace Hikipuro.Text {
 				if (match.Length <= 0) {
 					continue;
 				}
+				// マッチした
 				tokenPattern = pattern;
-				index += match.Length;
-				lineIndex += match.Length;
 				break;
 			}
 
@@ -249,9 +265,14 @@ namespace Hikipuro.Text {
 			tokenMatch.type = tokenPattern.type;
 			tokenMatch.index = index;
 			tokenMatch.lineNumber = lineNumber;
-			tokenMatch.lineIndex = lineIndex - match.Length;
+			tokenMatch.lineIndex = lineIndex;
 			tokenMatch.match = match;
 			tokenMatch.text = match.Value;
+
+			// インデックスの位置を動かしておく
+			index += match.Length;
+			lineIndex += match.Length;
+
 			return tokenMatch;
 		}
 
@@ -273,7 +294,7 @@ namespace Hikipuro.Text {
 		/// </summary>
 		/// <param name="text">チェックする文字列.</param>
 		/// <param name="index">チェックする場所.</param>
-		/// <returns>マッチ: true, マッチしない: false.</returns>
+		/// <returns>true: マッチした, false: マッチしなかった.</returns>
 		private bool MatchNewLine(string text, int index) {
 			Match match = newLineRegex.Match(text, index);
 			if (!match.Success) {

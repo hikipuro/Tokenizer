@@ -36,14 +36,14 @@ namespace Tokenizer.Sample {
 			// - ダブルクォート内での改行を許可しない文字列
 			tokenizer.AddPattern(TokenType.String, @"""((?<=\\)""|[^\r\n""])*""");
 
-			// データをリストに追加する前にチェックする場合.
+			// リストにトークンを追加する直前に発生するイベント
 			// - 戻り値 true で追加, false で追加しない
 			tokenizer.BeforeAddToken += (TokenMatch<TokenType> tokenMatch) => {
 				/*
 				if (tokenMatch.type == TokenType.NewLine) {
 					return false;
 				}
-				*/
+				//*/
 
 				// 文字列にマッチした場合
 				if (tokenMatch.type == TokenType.String) {
@@ -55,7 +55,7 @@ namespace Tokenizer.Sample {
 						tokenMatch.lineNumber, tokenMatch.lineIndex,
 						tokenMatch.type, tokenMatch.text
 					);
-					*/
+					//*/
 					// 前後からダブルクォートを取り除く
 					string matchText = tokenMatch.text;
 					matchText = matchText.Trim('"');
@@ -64,6 +64,22 @@ namespace Tokenizer.Sample {
 
 				return true;
 			};
+
+			// リストにトークンを追加した直後に発生するイベント
+			tokenizer.AddToken += (TokenList<TokenType> tokenList, Token<TokenType> token) => {
+				/*
+				// デバッグ用
+				Console.WriteLine(
+					"token: {0} ({1},{2}): {3}: {4}",
+					token.index,
+					token.lineNumber, token.lineIndex,
+					token.type, token.text
+				);
+				//*/
+			};
+
+			// タイムアウト時間を設定する (ミリ秒)
+			//tokenizer.timeout = 1000;
 
 			// トークンに分解する
 			TokenList<TokenType> tokens = tokenizer.Tokenize(text);
@@ -82,7 +98,7 @@ namespace Tokenizer.Sample {
 					token.type, token.text
 				);
 			}
-			*/
+			//*/
 			return tokens;
 		}
 	}
