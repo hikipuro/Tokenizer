@@ -37,17 +37,17 @@ namespace Tokenizer.Sample {
 			StringBuilder csv = new StringBuilder();
 			foreach (Token<TokenType> token in tokens) {
 				// 改行文字
-				if (token.type == TokenType.NewLine) {
+				if (token.Type == TokenType.NewLine) {
 					csv.AppendLine();
 					continue;
 				}
 				// カンマ
-				if (token.type == TokenType.Comma) {
+				if (token.Type == TokenType.Comma) {
 					csv.Append("\t");
 					continue;
 				}
 				// 数値と文字列
-				csv.Append(token.text);
+				csv.Append(token.Text);
 			}
 
 			// 画面に表示する

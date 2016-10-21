@@ -37,30 +37,30 @@ namespace Tokenizer.Sample {
 			tokenizer.AddPattern(TokenType.String, @"""((?<=\\)""|[^\r\n""])*""");
 
 			// リストにトークンを追加する直前に発生するイベント
-			// - e.cancel = true; で追加しない
+			// - e.Cancel = true; で追加しない
 			tokenizer.BeforeAddToken += (object sender, BeforeAddTokenEventArgs<TokenType> e) => {
 				/*
-				if (e.tokenMatch.type == TokenType.NewLine) {
-					e.cancel = true;
+				if (e.TokenMatch.Type == TokenType.NewLine) {
+					e.Cancel = true;
 					return;
 				}
 				//*/
 
 				// 文字列にマッチした場合
-				if (e.tokenMatch.type == TokenType.String) {
+				if (e.TokenMatch.Type == TokenType.String) {
 					/*
 					// デバッグ用
 					Console.WriteLine(
 						"token: {0} ({1},{2}): {3}: {4}",
-						tokenMatch.index,
-						tokenMatch.lineNumber, tokenMatch.lineIndex,
-						tokenMatch.type, tokenMatch.text
+						e.TokenMatch.Index,
+						e.TokenMatch.LineNumber, e.TokenMatch.LineIndex,
+						e.TokenMatch.Type, e.TokenMatch.Text
 					);
 					//*/
 					// 前後からダブルクォートを取り除く
-					string matchText = e.tokenMatch.text;
+					string matchText = e.TokenMatch.Text;
 					matchText = matchText.Trim('"');
-					e.tokenMatch.text = matchText;
+					e.TokenMatch.Text = matchText;
 				}
 			};
 
@@ -68,34 +68,35 @@ namespace Tokenizer.Sample {
 			tokenizer.TokenAdded += (object sender, TokenAddedEventArgs<TokenType> e) => {
 				/*
 				// デバッグ用
-				Token<TokenType> token = e.token;
 				Console.WriteLine(
 					"token: {0} ({1},{2}): {3}: {4}",
-					token.index,
-					token.lineNumber, token.lineIndex,
-					token.type, token.text
+					e.Token.Index,
+					e.Token.LineNumber, e.Token.LineIndex,
+					e.Token.Type, e.Token.Text
 				);
 				//*/
 			};
 
 			// タイムアウト時間を設定する (ミリ秒)
-			//tokenizer.timeout = 1000;
+			//tokenizer.Timeout = 1000;
 
 			// トークンに分解する
 			TokenList<TokenType> tokens = tokenizer.Tokenize(text);
 
 			// 末尾に EOF を追加して, 番兵にする場合
-			//Token<TokenType> tokenEOF = new Token<TokenType>();
-			//tokenEOF.type = TokenType.EOF;
-			//tokens.Add(tokenEOF);
+			/*
+			Token<TokenType> tokenEOF = new Token<TokenType>();
+			tokenEOF.Type = TokenType.EOF;
+			tokens.Add(tokenEOF);
+			//*/
 
 			/*
 			// 分解した内容を表示する (デバッグ用)
 			foreach (Token<TokenType> token in tokens) {
 				Console.WriteLine(
 					"token: ({0},{1}): {2}: {3}",
-					token.lineNumber, token.lineIndex,
-					token.type, token.text
+					token.LineNumber, token.LineIndex,
+					token.Type, token.Text
 				);
 			}
 			//*/

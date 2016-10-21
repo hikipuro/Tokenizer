@@ -7,27 +7,27 @@
 		/// <summary>
 		/// トークンの種類.
 		/// </summary>
-		public TokenType type;
+		public TokenType Type;
 
 		/// <summary>
 		/// マッチしたテキスト.
 		/// </summary>
-		public string text;
+		public string Text;
 
 		/// <summary>
 		/// マッチした文字列の位置.
 		/// </summary>
-		public int index;
+		public int Index;
 
 		/// <summary>
 		/// マッチした文字列の行番号.
 		/// </summary>
-		public int lineNumber;
+		public int LineNumber;
 
 		/// <summary>
 		/// 行の文字位置.
 		/// </summary>
-		public int lineIndex;
+		public int LineIndex;
 
 		/// <summary>
 		/// TokenMatch オブジェクトから Token オブジェクトを作成する.
@@ -36,11 +36,11 @@
 		/// <returns>Token オブジェクト.</returns>
 		public static Token<TokenType> FromTokenMatch(TokenMatch<TokenType> tokenMatch) {
 			Token<TokenType> token = new Token<TokenType>();
-			token.type = tokenMatch.type;
-			token.text = tokenMatch.text;
-			token.index = tokenMatch.index;
-			token.lineNumber = tokenMatch.lineNumber;
-			token.lineIndex = tokenMatch.lineIndex;
+			token.Type = tokenMatch.Type;
+			token.Text = tokenMatch.Text;
+			token.Index = tokenMatch.Index;
+			token.LineNumber = tokenMatch.LineNumber;
+			token.LineIndex = tokenMatch.LineIndex;
 			return token;
 		}
 	}

@@ -9,17 +9,17 @@ namespace Hikipuro.Text {
 		/// <summary>
 		/// トークンの種類.
 		/// </summary>
-		public TokenType type;
+		public TokenType Type;
 
 		/// <summary>
 		/// マッチ用の正規表現文字列.
 		/// </summary>
-		public string pattern;
+		public string Pattern;
 
 		/// <summary>
-		/// pattern の正規表現.
+		/// Pattern の正規表現.
 		/// </summary>
-		public Regex regex;
+		public Regex Regex;
 
 		/// <summary>
 		/// コンストラクタ.
@@ -27,8 +27,8 @@ namespace Hikipuro.Text {
 		/// <param name="type">トークンの種類.</param>
 		/// <param name="pattern">マッチ用の正規表現文字列.</param>
 		public TokenPattern(TokenType type, string pattern) {
-			this.type = type;
-			this.pattern = pattern;
+			this.Type = type;
+			this.Pattern = pattern;
 			CompileRegex();
 		}
 
@@ -39,18 +39,18 @@ namespace Hikipuro.Text {
 		/// <param name="pattern">マッチ用の正規表現文字列.</param>
 		/// <param name="options">正規表現のオプション.</param>
 		public TokenPattern(TokenType type, string pattern, RegexOptions options) {
-			this.type = type;
-			this.pattern = pattern;
+			this.Type = type;
+			this.Pattern = pattern;
 			CompileRegex(options);
 		}
 
 		/// <summary>
-		/// pattern 文字列を正規表現に変換する.
+		/// Pattern 文字列を正規表現に変換する.
 		/// </summary>
 		/// <param name="options">正規表現のオプション.</param>
 		private void CompileRegex(RegexOptions options = RegexOptions.Compiled) {
-			Regex regex = new Regex(pattern, options);
-			this.regex = regex;
+			Regex regex = new Regex(Pattern, options);
+			this.Regex = regex;
 		}
 	}
 }

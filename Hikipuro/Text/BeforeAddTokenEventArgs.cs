@@ -9,19 +9,19 @@ namespace Hikipuro.Text {
 		/// <summary>
 		/// トークンのマッチした場所を表すオブジェクト.
 		/// </summary>
-		public TokenMatch<TokenType> tokenMatch;
+		public TokenMatch<TokenType> TokenMatch;
 
 		/// <summary>
 		/// リストに追加する処理をキャンセルする場合は true.
 		/// </summary>
-		public bool cancel = false;
+		public bool Cancel = false;
 
 		/// <summary>
 		/// コンストラクタ.
 		/// </summary>
 		/// <param name="tokenMatch">トークンのマッチした場所を表すオブジェクト.</param>
 		public BeforeAddTokenEventArgs(TokenMatch<TokenType> tokenMatch)  {
-			this.tokenMatch = tokenMatch;
+			this.TokenMatch = tokenMatch;
 		}
 	}
 }

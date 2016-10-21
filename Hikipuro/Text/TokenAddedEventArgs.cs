@@ -9,12 +9,12 @@ namespace Hikipuro.Text {
 		/// <summary>
 		/// 処理中のトークンのリスト.
 		/// </summary>
-		public TokenList<TokenType> tokenList;
+		public TokenList<TokenType> TokenList;
 
 		/// <summary>
 		/// 追加されたトークン.
 		/// </summary>
-		public Token<TokenType> token;
+		public Token<TokenType> Token;
 
 		/// <summary>
 		/// コンストラクタ.
@@ -22,8 +22,8 @@ namespace Hikipuro.Text {
 		/// <param name="tokenList">処理中のトークンのリスト.</param>
 		/// <param name="token">追加されたトークン.</param>
 		public TokenAddedEventArgs(TokenList<TokenType> tokenList, Token<TokenType> token) {
-			this.tokenList = tokenList;
-			this.token = token;
+			this.TokenList = tokenList;
+			this.Token = token;
 		}
 	}
 }

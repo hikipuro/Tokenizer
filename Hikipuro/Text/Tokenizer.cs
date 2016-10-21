@@ -12,7 +12,7 @@ namespace Hikipuro.Text {
 	public class Tokenizer<TokenType> where TokenType : struct {
 		/// <summary>
 		/// リストにトークンを追加する直前に呼ばれるイベント.
-		/// イベントハンドラ内で e.cancel = true; を設定したトークンは追加しない.
+		/// イベントハンドラ内で e.Cancel = true; を設定したトークンは追加しない.
 		/// </summary>
 		public event BeforeAddTokenEventHandler<TokenType> BeforeAddToken;
 
@@ -27,14 +27,14 @@ namespace Hikipuro.Text {
 		/// 処理が長時間に及ぶ場合はタイムアウト例外を発生させる.
 		/// 0 以下の値を入れるとタイムアウトしないようになる.
 		/// </summary>
-		public int timeout = 10000;
+		public int Timeout = 10000;
 
 		/// <summary>
 		/// System.Threading.Sleep() を定期的に入れるための値.
-		/// sleepWait で指定された回数分ループするごとに 1 回スリープする.
+		/// SleepWait で指定された回数分ループするごとに 1 回スリープする.
 		/// 0 以下の値を入れるとスリープしないようになる.
 		/// </summary>
-		public int sleepWait = 1000;
+		public int SleepWait = 1000;
 
 		/// <summary>
 		/// トークンのマッチ用パターン.
@@ -146,7 +146,7 @@ namespace Hikipuro.Text {
 		/// <returns>true: すでに追加されている, false: 追加されていない.</returns>
 		public bool HasPatternType(TokenType type) {
 			foreach (TokenPattern<TokenType> pattern in patterns) {
-				if (pattern.type.Equals(type)) {
+				if (pattern.Type.Equals(type)) {
 					return true;
 				}
 			}
@@ -157,7 +157,7 @@ namespace Hikipuro.Text {
 		/// 登録されたパターンを使ってトークンに分割する.
 		/// マッチに失敗した場合, "Parse Error" を例外として投げる (Exception クラス).
 		/// 処理が長時間に及ぶ場合, "Timeout" を例外として投げる (Exception クラス).
-		/// タイムアウト時間は, timeout 変数で変更する.
+		/// タイムアウト時間は, Timeout 変数で変更する.
 		/// TODO: 独自の Parse Error を作るか検討する.
 		/// </summary>
 		/// <param name="text">処理対象の文字列.</param>
@@ -180,8 +180,8 @@ namespace Hikipuro.Text {
 			int loopCount = 0;
 
 			// タイムアウトのチェック
-			if (timeout > 0) {
-				timer.Interval = timeout;
+			if (Timeout > 0) {
+				timer.Interval = Timeout;
 				timer.Start();
 			}
 
@@ -205,7 +205,7 @@ namespace Hikipuro.Text {
 					BeforeAddTokenEventArgs<TokenType> args
 						= new BeforeAddTokenEventArgs<TokenType>(tokenMatch);
 					BeforeAddToken(this, args);
-					if (args.cancel == false) {
+					if (args.Cancel == false) {
 						AddToken(tokens, tokenMatch);
 					}
 				} else {
@@ -220,9 +220,9 @@ namespace Hikipuro.Text {
 				}
 
 				// Sleep() を定期的に入れる
-				if (sleepWait > 0) {
+				if (SleepWait > 0) {
 					loopCount++;
-					if (loopCount > sleepWait) {
+					if (loopCount > SleepWait) {
 						loopCount = 0;
 						System.Threading.Thread.Sleep(1);
 					}
@@ -247,7 +247,7 @@ namespace Hikipuro.Text {
 
 			// すべてのパターンを試す
 			foreach (TokenPattern<TokenType> pattern in patterns) {
-				match = pattern.regex.Match(text, index);
+				match = pattern.Regex.Match(text, index);
 				// マッチに失敗した場合
 				if (!match.Success) {
 					continue;
@@ -272,12 +272,12 @@ namespace Hikipuro.Text {
 
 			// マッチした場合
 			TokenMatch<TokenType> tokenMatch = new TokenMatch<TokenType>();
-			tokenMatch.type = tokenPattern.type;
-			tokenMatch.index = index;
-			tokenMatch.lineNumber = lineNumber;
-			tokenMatch.lineIndex = lineIndex;
-			tokenMatch.match = match;
-			tokenMatch.text = match.Value;
+			tokenMatch.Type = tokenPattern.Type;
+			tokenMatch.Index = index;
+			tokenMatch.LineNumber = lineNumber;
+			tokenMatch.LineIndex = lineIndex;
+			tokenMatch.Match = match;
+			tokenMatch.Text = match.Value;
 
 			// インデックスの位置を動かしておく
 			index += match.Length;
@@ -348,7 +348,7 @@ namespace Hikipuro.Text {
 		private void ThrowTimeout() {
 			throw new TimeoutException(string.Format(
 				"Timeout: Tokenizer.Tokenize() (Timeout:{0})",
-				timeout
+				Timeout
 			));
 		}
 	}
