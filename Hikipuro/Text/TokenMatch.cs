@@ -36,5 +36,32 @@ namespace Hikipuro.Text {
 		/// マッチした時に使用した, 正規表現の Match オブジェクト.
 		/// </summary>
 		public Match Match;
+
+		/// <summary>
+		/// 加工前のマッチした文字列.
+		/// </summary>
+		string rawText;
+
+		/// <summary>
+		/// 加工前のマッチした文字列 (読み取り専用).
+		/// </summary>
+		public string RawText {
+			get { return rawText; }
+		}
+
+		/// <summary>
+		/// コンストラクタ.
+		/// </summary>
+		public TokenMatch() {
+		}
+
+		/// <summary>
+		/// コンストラクタ.
+		/// </summary>
+		/// <param name="text">マッチした文字列.</param>
+		public TokenMatch(string text) {
+			rawText = text;
+			this.Text = text;
+		}
 	}
 }

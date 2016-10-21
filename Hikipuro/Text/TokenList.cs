@@ -14,5 +14,15 @@ namespace Hikipuro.Text {
 		public void Add(TokenMatch<TokenType> tokenMatch) {
 			Add(Token<TokenType>.FromTokenMatch(tokenMatch));
 		}
+
+		/// <summary>
+		/// リストの最後から, インデックス値を指定して要素を取得する.
+		/// </summary>
+		/// <param name="index">最後の要素からのインデックス番号.</param>
+		/// <returns>トークン.</returns>
+		public Token<TokenType> Last(int index = 0) {
+			int lastIndex = Count - 1;
+			return this[lastIndex - index];
+		}
 	}
 }

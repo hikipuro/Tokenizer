@@ -91,11 +91,15 @@ namespace Hikipuro.Text {
 				patterns.Clear();
 				patterns = null;
 			}
-			foreach (Delegate d in BeforeAddToken.GetInvocationList()) {
-				BeforeAddToken -= (BeforeAddTokenEventHandler<TokenType>)d;
+			if (BeforeAddToken != null) {
+				foreach (Delegate d in BeforeAddToken.GetInvocationList()) {
+					BeforeAddToken -= (BeforeAddTokenEventHandler<TokenType>)d;
+				}
 			}
-			foreach (Delegate d in TokenAdded.GetInvocationList()) {
-				TokenAdded -= (TokenAddedEventHandler<TokenType>)d;
+			if (TokenAdded != null) {
+				foreach (Delegate d in TokenAdded.GetInvocationList()) {
+					TokenAdded -= (TokenAddedEventHandler<TokenType>)d;
+				}
 			}
 		}
 
@@ -271,13 +275,13 @@ namespace Hikipuro.Text {
 			}
 
 			// マッチした場合
-			TokenMatch<TokenType> tokenMatch = new TokenMatch<TokenType>();
+			TokenMatch<TokenType> tokenMatch = new TokenMatch<TokenType>(match.Value);
 			tokenMatch.Type = tokenPattern.Type;
 			tokenMatch.Index = index;
 			tokenMatch.LineNumber = lineNumber;
 			tokenMatch.LineIndex = lineIndex;
 			tokenMatch.Match = match;
-			tokenMatch.Text = match.Value;
+			//tokenMatch.Text = match.Value;
 
 			// インデックスの位置を動かしておく
 			index += match.Length;
@@ -322,7 +326,7 @@ namespace Hikipuro.Text {
 
 			// 追加後イベントを実行する
 			if (TokenAdded != null) {
-				Token<TokenType> token = tokenList[tokenList.Count - 1];
+				Token<TokenType> token = tokenList.Last();
 				TokenAddedEventArgs<TokenType> args
 					= new TokenAddedEventArgs<TokenType>(tokenList, token);
 				TokenAdded(this, args);
