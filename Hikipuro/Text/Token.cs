@@ -63,6 +63,32 @@ namespace Hikipuro.Text {
 		}
 
 		/// <summary>
+		/// Index + Length の位置.
+		/// </summary>
+		public int RightIndex {
+			get { return Index + Text.Length; }
+		}
+
+		/// <summary>
+		/// LineIndex + Length の位置.
+		/// </summary>
+		public int RightLineIndex {
+			get { return LineIndex + Text.Length; }
+		}
+
+		/// <summary>
+		/// このトークンが, リスト内の最後の要素かチェックする.
+		/// </summary>
+		public bool IsLast {
+			get {
+				if (TokenList == null) {
+					return false;
+				}
+				return TokenList.Last(0) == this;
+			}
+		}
+
+		/// <summary>
 		/// 1 つ次の要素を取得する.
 		/// </summary>
 		/// <returns>1 つ次の要素.</returns>

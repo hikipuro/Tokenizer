@@ -23,24 +23,30 @@ namespace Hikipuro.Text {
 
 		/// <summary>
 		/// タイムアウト時間 (ミリ秒).
-		/// デフォルト値: 10 秒.
+		/// デフォルト値: 0.
 		/// 処理が長時間に及ぶ場合はタイムアウト例外を発生させる.
 		/// 0 以下の値を入れるとタイムアウトしないようになる.
 		/// </summary>
-		public int Timeout = 10000;
+		public int Timeout = 0;
 
 		/// <summary>
 		/// System.Threading.Sleep() を定期的に入れるための値.
-		/// SleepWait で指定された回数分ループするごとに 1 回スリープする.
+		/// デフォルト値: 0.
+		/// SleepWait で指定された回数分ループするごとに 1 回スリープする (トークンの個数).
 		/// 0 以下の値を入れるとスリープしないようになる.
 		/// </summary>
-		public int SleepWait = 1000;
+		public int SleepWait = 0;
 
 		/// <summary>
 		/// トークンのマッチ用パターン.
 		/// AddPattern() で追加する.
 		/// </summary>
 		List<TokenPattern<TokenType>> patterns;
+
+		/// <summary>
+		/// 行の開始位置のインデックス番号のリスト.
+		/// </summary>
+		List<int> lineIndexList;
 
 		/// <summary>
 		/// 改行にマッチする正規表現.
@@ -71,10 +77,33 @@ namespace Hikipuro.Text {
 		Timer timer;
 
 		/// <summary>
+		/// 処理中の文字位置.
+		/// </summary>
+		public int Index {
+			get { return index; }
+		}
+
+		/// <summary>
+		/// 処理中の行番号.
+		/// </summary>
+		public int LineNumber {
+			get { return lineNumber; }
+		}
+
+		/// <summary>
+		/// 処理中の行の文字位置.
+		/// </summary>
+		public int LineIndex {
+			get { return lineIndex; }
+		}
+
+		/// <summary>
 		/// コンストラクタ.
 		/// </summary>
 		public Tokenizer() {
 			patterns = new List<TokenPattern<TokenType>>();
+			lineIndexList = new List<int>();
+
 			#if UNITY_5 || UNITY_5_3_OR_NEWER
 			newLineRegex = new Regex("\r\n|\r|\n", RegexOptions.None);
 			#else
@@ -94,6 +123,10 @@ namespace Hikipuro.Text {
 			if (patterns != null) {
 				patterns.Clear();
 				patterns = null;
+			}
+			if (lineIndexList != null) {
+				lineIndexList.Clear();
+				lineIndexList = null;
 			}
 			if (BeforeAddToken != null) {
 				foreach (Delegate d in BeforeAddToken.GetInvocationList()) {
@@ -183,6 +216,8 @@ namespace Hikipuro.Text {
 			index = 0;
 			lineIndex = 0;
 			lineNumber = 1;
+			lineIndexList.Clear();
+			lineIndexList.Add(0);
 
 			// Sleep() を定期的に入れる用
 			int loopCount = 0;
@@ -196,17 +231,28 @@ namespace Hikipuro.Text {
 			// テキストの終わりまでマッチを試す
 			while (index < text.Length) {
 				// 改行チェック
-				bool matchNewLine = MatchNewLine(text, index);
+				bool isMatchNewLine = false;
+				Match match = newLineRegex.Match(text, index, 2);
+				if (match.Success && match.Index == index) {
+					isMatchNewLine = true;
+					lineIndexList.Add(index + match.Length);
+				}
 
 				// 登録されたパターンでマッチを試す
 				TokenMatch<TokenType> tokenMatch = TryMatchToken(text);
 
 				// マッチしなかった時は, 例外を投げる
 				if (tokenMatch == null) {
-					ThrowParseError(lineNumber, lineIndex);
+					ThrowParseError(text, lineNumber, lineIndex);
 				}
 
 				// マッチした場合
+
+				// インデックスの位置を動かしておく
+				int matchLength = tokenMatch.Match.Length;
+				index += matchLength;
+				lineIndex += matchLength;
+
 				if (BeforeAddToken != null) {
 					// 追加前イベントが登録されている場合は実行する
 					// false が返ってきた場合はトークンリストに追加しない
@@ -222,7 +268,7 @@ namespace Hikipuro.Text {
 				}
 
 				// ループの開始位置で改行文字が見つかった時
-				if (matchNewLine) {
+				if (isMatchNewLine) {
 					lineIndex = 0;
 					lineNumber++;
 				}
@@ -247,7 +293,7 @@ namespace Hikipuro.Text {
 		/// トークンのマッチを試す.
 		/// マッチしなかった場合, null を返す.
 		/// </summary>
-		/// <param name="text"></param>
+		/// <param name="text">処理対象の文字列.</param>
 		/// <returns></returns>
 		private TokenMatch<TokenType> TryMatchToken(string text) {
 			TokenPattern<TokenType> tokenPattern = null;
@@ -287,10 +333,6 @@ namespace Hikipuro.Text {
 			tokenMatch.Match = match;
 			//tokenMatch.Text = match.Value;
 
-			// インデックスの位置を動かしておく
-			index += match.Length;
-			lineIndex += match.Length;
-
 			return tokenMatch;
 		}
 
@@ -304,20 +346,6 @@ namespace Hikipuro.Text {
 				ThrowTimeout();
 			};
 			return timer;
-		}
-
-		/// <summary>
-		/// 指定した位置の先頭が, 改行文字とマッチするかチェックする.
-		/// </summary>
-		/// <param name="text">チェックする文字列.</param>
-		/// <param name="index">チェックする場所.</param>
-		/// <returns>true: マッチした, false: マッチしなかった.</returns>
-		private bool MatchNewLine(string text, int index) {
-			Match match = newLineRegex.Match(text, index);
-			if (!match.Success) {
-				return false;
-			}
-			return match.Index == index;
 		}
 
 		/// <summary>
@@ -338,15 +366,40 @@ namespace Hikipuro.Text {
 		}
 
 		/// <summary>
+		/// 指定された行番号の文字列を取得する.
+		/// </summary>
+		/// <param name="text">処理対象の文字列.</param>
+		/// <param name="lineNumber">行番号.</param>
+		/// <returns>指定された行の文字列.</returns>
+		private string GetLine(string text, int lineNumber) {
+			lineNumber--;
+			if (lineNumber < 0 || lineNumber >= lineIndexList.Count) {
+				return string.Empty;
+			}
+			int index = lineIndexList[lineNumber];
+			Match match = newLineRegex.Match(text, index);
+			if (match.Success) {
+				string lineText = text.Substring(index, match.Index - index);
+				//lineText.Replace("\t", "    ");
+				return lineText;
+			}
+			return string.Empty;
+		}
+
+		/// <summary>
 		/// ParseError 例外を発生させる.
 		/// </summary>
-		/// <param name="lineNumber"></param>
-		/// <param name="lineIndex"></param>
-		private void ThrowParseError(int lineNumber, int lineIndex) {
+		/// <param name="text">処理対象の文字列.</param>
+		/// <param name="lineNumber">行番号.</param>
+		/// <param name="lineIndex">行の位置.</param>
+		private void ThrowParseError(string text, int lineNumber, int lineIndex) {
+			string lineText = GetLine(text, lineNumber);
 			throw new Exception(string.Format(
-				"Parse Error (Line:{0}, Index:{1})",
+				"Parse Error (Line:{0}, Index:{1}){2}{3}",
 				lineNumber,
-				lineIndex
+				lineIndex,
+				Environment.NewLine,
+				lineText
 			));
 		}
 
@@ -355,7 +408,7 @@ namespace Hikipuro.Text {
 		/// </summary>
 		private void ThrowTimeout() {
 			throw new TimeoutException(string.Format(
-				"Timeout: Tokenizer.Tokenize() (Timeout:{0})",
+				"Timeout: Tokenizer.Tokenize() (Timeout:{0}ms)",
 				Timeout
 			));
 		}
