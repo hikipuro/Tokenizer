@@ -12,9 +12,9 @@ namespace Tokenizer.Sample {
 		/// </summary>
 		public enum TokenType {
 			Comma,
-			NewLine,
 			Number,
 			String,
+			NewLine,
 			// EOF,
 		}
 
@@ -29,12 +29,12 @@ namespace Tokenizer.Sample {
 
 			// トークンの分解規則を追加する
 			tokenizer.AddPattern(TokenType.Comma, "\\G,");
-			tokenizer.AddPattern(TokenType.NewLine, "\\G\r\n|\r|\n");
 			tokenizer.AddPattern(TokenType.Number, @"\G\d+[.]?\d*");
 			// - ダブルクォート内での改行を許可する文字列
 			//tokenizer.AddPattern(TokenType.String, @"\G""((?<=\\)""|[^""])*""");
 			// - ダブルクォート内での改行を許可しない文字列
 			tokenizer.AddPattern(TokenType.String, @"\G""((?<=\\)""|[^\r\n""])*""");
+			tokenizer.AddPattern(TokenType.NewLine, "\\G\r\n|\r|\n");
 
 			// リストにトークンを追加する直前に発生するイベント
 			// - e.Cancel = true; で追加しない

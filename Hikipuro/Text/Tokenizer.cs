@@ -49,6 +49,12 @@ namespace Hikipuro.Text {
 			public int LineIndex = 0;
 
 			/// <summary>
+			/// トークンのマッチ用パターン.
+			/// AddPattern() で追加する.
+			/// </summary>
+			public TokenPattern<TokenType>[] Patterns;
+
+			/// <summary>
 			/// コンストラクタ.
 			/// </summary>
 			public Context() {
@@ -156,22 +162,27 @@ namespace Hikipuro.Text {
 		/// <param name="text">処理対象の文字列.</param>
 		/// <returns>トークンのリスト.</returns>
 		public TokenList<TokenType> Tokenize(string text) {
-			if (text == null || text == string.Empty) {
-				return null;
-			}
-
 			// 戻り値
 			TokenList<TokenType> tokens = new TokenList<TokenType>();
+
+			if (text == null || text == string.Empty) {
+				return tokens;
+			}
 
 			// コンテキストオブジェクトを作成する
 			Context context = new Context();
 			context.Text = text;
 
-			// Sleep() を定期的に入れる用
-			int loopCount = 0;
+			// マッチパターンの準備
+			context.Patterns = new TokenPattern<TokenType>[patterns.Count];
+			patterns.CopyTo(context.Patterns);
 
 			// 改行位置をチェックしておく
 			context.LineIndexList = CreateLineIndexList(text);
+
+			// Sleep() を定期的に入れる用
+			int loopCount = 0;
+			int sleepWait = SleepWait;
 
 			// テキストの終わりまでマッチを試す
 			while (context.Index < text.Length) {
@@ -211,9 +222,9 @@ namespace Hikipuro.Text {
 				}
 
 				// Sleep() を定期的に入れる
-				if (SleepWait > 0) {
+				if (sleepWait > 0) {
 					loopCount++;
-					if (loopCount > SleepWait) {
+					if (loopCount > sleepWait) {
 						loopCount = 0;
 						System.Threading.Thread.Sleep(1);
 					}
@@ -256,7 +267,7 @@ namespace Hikipuro.Text {
 			Match match = null;
 
 			// すべてのパターンを試す
-			foreach (TokenPattern<TokenType> pattern in patterns) {
+			foreach (TokenPattern<TokenType> pattern in context.Patterns) {
 				match = pattern.Regex.Match(context.Text, context.Index);
 				// マッチに失敗した場合
 				if (!match.Success) {

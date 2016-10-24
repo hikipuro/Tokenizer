@@ -26,6 +26,7 @@
 			this.buttonLoadCsv = new System.Windows.Forms.Button();
 			this.textBox = new System.Windows.Forms.TextBox();
 			this.buttonLoadJson = new System.Windows.Forms.Button();
+			this.textBoxTime = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// buttonLoadCsv
@@ -58,11 +59,19 @@
 			this.buttonLoadJson.UseVisualStyleBackColor = true;
 			this.buttonLoadJson.Click += new System.EventHandler(this.buttonLoadJson_Click);
 			// 
+			// textBoxTime
+			// 
+			this.textBoxTime.Location = new System.Drawing.Point(566, 16);
+			this.textBoxTime.Name = "textBoxTime";
+			this.textBoxTime.Size = new System.Drawing.Size(100, 19);
+			this.textBoxTime.TabIndex = 3;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(678, 527);
+			this.Controls.Add(this.textBoxTime);
 			this.Controls.Add(this.buttonLoadJson);
 			this.Controls.Add(this.textBox);
 			this.Controls.Add(this.buttonLoadCsv);
@@ -78,6 +87,7 @@
 		private System.Windows.Forms.Button buttonLoadCsv;
 		private System.Windows.Forms.TextBox textBox;
 		private System.Windows.Forms.Button buttonLoadJson;
+		private System.Windows.Forms.TextBox textBoxTime;
 	}
 }
 

@@ -34,9 +34,10 @@ namespace Tokenizer.Sample {
 
 			// CSV ファイルを分解する
 			TokenList<CSVTokenType> tokens = null;
-			Benchmark((i) => {
+			long time = Benchmark((i) => {
 				tokens = CSVTokenizer.Tokenize(text);
 			}, 1);
+			textBoxTime.Text = time + " ms";
 
 			// 分解されたトークンを巡回する
 			StringBuilder stringBuilder = new StringBuilder();
@@ -91,9 +92,10 @@ namespace Tokenizer.Sample {
 
 			// JSON ファイルを分解する
 			TokenList<JsonTokenType> tokens = null;
-			Benchmark((i) => {
+			long time = Benchmark((i) => {
 				tokens = JsonTokenizer.Tokenize(text);
 			}, 1);
+			textBoxTime.Text = time + " ms";
 
 			// 分解されたトークンを巡回する
 			// (JSON ファイルをフォーマットする)
@@ -157,7 +159,14 @@ namespace Tokenizer.Sample {
 			stringBuilder.AppendLine();
 			stringBuilder.Insert(stringBuilder.Length, "  ", indentSize);
 		}
-		private static void Benchmark(System.Action<int> act, int iterations) {
+
+		/// <summary>
+		/// 実行時間を計測する.
+		/// </summary>
+		/// <param name="act"></param>
+		/// <param name="iterations"></param>
+		/// <returns></returns>
+		private static long Benchmark(System.Action<int> act, int iterations) {
 			GC.Collect();
 			act.Invoke(1); // run once outside of loop to avoid initialization costs
 			Stopwatch sw = Stopwatch.StartNew();
@@ -165,7 +174,7 @@ namespace Tokenizer.Sample {
 				act.Invoke(1);
 			}
 			sw.Stop();
-			Console.WriteLine((sw.ElapsedMilliseconds / iterations).ToString() + " ms");
+			return sw.ElapsedMilliseconds / (long)iterations;
 		}
 	}
 }
