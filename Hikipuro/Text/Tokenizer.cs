@@ -151,10 +151,7 @@ namespace Hikipuro.Text {
 
 		/// <summary>
 		/// 登録されたパターンを使ってトークンに分割する.
-		/// マッチに失敗した場合, "Parse Error" を例外として投げる (Exception クラス).
-		/// 処理が長時間に及ぶ場合, "Timeout" を例外として投げる (Exception クラス).
-		/// タイムアウト時間は, Timeout 変数で変更する.
-		/// TODO: 独自の Parse Error を作るか検討する.
+		/// マッチに失敗した場合, ParseException 例外を発生させる.
 		/// </summary>
 		/// <param name="text">処理対象の文字列.</param>
 		/// <returns>トークンのリスト.</returns>
@@ -183,7 +180,7 @@ namespace Hikipuro.Text {
 
 				// マッチしなかった時は, 例外を投げる
 				if (tokenMatch == null) {
-					ThrowParseError(context);
+					ThrowParseException(context);
 				}
 
 				// マッチした場合
@@ -340,12 +337,12 @@ namespace Hikipuro.Text {
 		}
 
 		/// <summary>
-		/// ParseError 例外を発生させる.
+		/// ParseException 例外を発生させる.
 		/// </summary>
 		/// <param name="context">コンテキスト.</param>
-		private void ThrowParseError(Context context) {
+		private void ThrowParseException(Context context) {
 			string lineText = GetLine(context);
-			throw new Exception(string.Format(
+			throw new ParseException(string.Format(
 				"Parse Error (Line:{0}, Index:{1}){2}{3}",
 				context.LineNumber,
 				context.LineIndex,

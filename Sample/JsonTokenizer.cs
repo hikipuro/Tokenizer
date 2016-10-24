@@ -91,9 +91,6 @@ namespace Tokenizer.Sample {
 				//*/
 			};
 
-			// タイムアウト時間を設定する (ミリ秒)
-			//tokenizer.Timeout = 1000;
-
 			// トークンに分解する
 			TokenList<TokenType> tokens = tokenizer.Tokenize(text);
 

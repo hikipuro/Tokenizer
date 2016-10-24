@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Hikipuro\Text\BeforeAddTokenEventArgs.cs" />
     <Compile Include="Hikipuro\Text\BeforeAddTokenEventHandler.cs" />
+    <Compile Include="Hikipuro\Text\ParseException.cs" />
     <Compile Include="Hikipuro\Text\TokenAddedEventArgs.cs" />
     <Compile Include="Hikipuro\Text\TokenAddedEventHandler.cs" />
     <Compile Include="Hikipuro\Text\TokenTypeGroup.cs" />
