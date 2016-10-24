@@ -34,19 +34,19 @@ namespace Tokenizer.Sample {
 			Tokenizer<TokenType> tokenizer = new Tokenizer<TokenType>();
 
 			// トークンの分解規則を追加する
-			tokenizer.AddPattern(TokenType.NewLine, "\r\n|\r|\n");
-			tokenizer.AddPattern(TokenType.Comma, ",");
-			tokenizer.AddPattern(TokenType.Colon, ":");
-			tokenizer.AddPattern(TokenType.OpenBrace, "{");
-			tokenizer.AddPattern(TokenType.CloseBrace, "}");
-			tokenizer.AddPattern(TokenType.OpenBracket, @"\[");
-			tokenizer.AddPattern(TokenType.CloseBracket, @"\]");
-			tokenizer.AddPattern(TokenType.Null, "null");
-			tokenizer.AddPattern(TokenType.True, "true");
-			tokenizer.AddPattern(TokenType.False, "false");
-			tokenizer.AddPattern(TokenType.Number, @"\d+[.]?\d*");
-			tokenizer.AddPattern(TokenType.String, @"""((?<=\\)""|[^\r\n""])*""");
-			tokenizer.AddPattern(TokenType.Space, @"\s+");
+			tokenizer.AddPattern(TokenType.NewLine, "\\G\r\n|\r|\n");
+			tokenizer.AddPattern(TokenType.Comma, "\\G,");
+			tokenizer.AddPattern(TokenType.Colon, "\\G:");
+			tokenizer.AddPattern(TokenType.OpenBrace, "\\G{");
+			tokenizer.AddPattern(TokenType.CloseBrace, "\\G}");
+			tokenizer.AddPattern(TokenType.OpenBracket, @"\G\[");
+			tokenizer.AddPattern(TokenType.CloseBracket, @"\G\]");
+			tokenizer.AddPattern(TokenType.Null, "\\Gnull");
+			tokenizer.AddPattern(TokenType.True, "\\Gtrue");
+			tokenizer.AddPattern(TokenType.False, "\\Gfalse");
+			tokenizer.AddPattern(TokenType.Number, @"\G\d+[.]?\d*");
+			tokenizer.AddPattern(TokenType.String, @"\G""((?<=\\)""|[^\r\n""])*""");
+			tokenizer.AddPattern(TokenType.Space, @"\G\s+");
 
 			// リストにトークンを追加する直前に発生するイベント
 			// - e.Cancel = true; で追加しない

@@ -1,5 +1,6 @@
 ﻿using Hikipuro.Text;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -30,9 +31,12 @@ namespace Tokenizer.Sample {
 			);
 			string text = reader.ReadToEnd();
 			reader.Close();
-			
+
 			// CSV ファイルを分解する
-			TokenList<CSVTokenType> tokens = CSVTokenizer.Tokenize(text);
+			TokenList<CSVTokenType> tokens = null;
+			Benchmark((i) => {
+				tokens = CSVTokenizer.Tokenize(text);
+			}, 1);
 
 			// 分解されたトークンを巡回する
 			StringBuilder stringBuilder = new StringBuilder();
@@ -85,8 +89,11 @@ namespace Tokenizer.Sample {
 			closeBlockGroup.Add(JsonTokenType.CloseBrace);
 			closeBlockGroup.Add(JsonTokenType.CloseBracket);
 
-			// CSV ファイルを分解する
-			TokenList<JsonTokenType> tokens = JsonTokenizer.Tokenize(text);
+			// JSON ファイルを分解する
+			TokenList<JsonTokenType> tokens = null;
+			Benchmark((i) => {
+				tokens = JsonTokenizer.Tokenize(text);
+			}, 1);
 
 			// 分解されたトークンを巡回する
 			// (JSON ファイルをフォーマットする)
@@ -149,6 +156,16 @@ namespace Tokenizer.Sample {
 			}
 			stringBuilder.AppendLine();
 			stringBuilder.Insert(stringBuilder.Length, "  ", indentSize);
+		}
+		private static void Benchmark(System.Action<int> act, int iterations) {
+			GC.Collect();
+			act.Invoke(1); // run once outside of loop to avoid initialization costs
+			Stopwatch sw = Stopwatch.StartNew();
+			for (int i = 0; i < iterations; i++) {
+				act.Invoke(1);
+			}
+			sw.Stop();
+			Console.WriteLine((sw.ElapsedMilliseconds / iterations).ToString() + " ms");
 		}
 	}
 }

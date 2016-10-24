@@ -157,6 +157,9 @@ namespace Hikipuro.Text {
 		/// <param name="patternText">マッチ用の正規表現文字列.</param>
 		/// <returns>追加されたパターン.</returns>
 		public TokenPattern<TokenType> AddPattern(TokenType type, string patternText) {
+			if (patternText == null || patternText == string.Empty) {
+				return null;
+			}
 			if (HasPatternType(type)) {
 				return null;
 			}
@@ -174,6 +177,12 @@ namespace Hikipuro.Text {
 		/// <param name="options">正規表現のオプション.</param>
 		/// <returns>追加されたパターン.</returns>
 		public TokenPattern<TokenType> AddPattern(TokenType type, string patternText, RegexOptions options) {
+			if (patternText == null || patternText == string.Empty) {
+				return null;
+			}
+			if (HasPatternType(type)) {
+				return null;
+			}
 			TokenPattern<TokenType> pattern;
 			pattern = new TokenPattern<TokenType>(type, patternText, options);
 			patterns.Add(pattern);
