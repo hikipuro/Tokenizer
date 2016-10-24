@@ -24,7 +24,7 @@ namespace Hikipuro.Text {
 		/// </summary>
 		class Context {
 			/// <summary>
-			/// 処理対象のテキスト.
+			/// 処理対象の文字列.
 			/// </summary>
 			public string Text;
 
@@ -342,13 +342,21 @@ namespace Hikipuro.Text {
 		/// <param name="context">コンテキスト.</param>
 		private void ThrowParseException(Context context) {
 			string lineText = GetLine(context);
-			throw new ParseException(string.Format(
+			ParseException exception = new ParseException(string.Format(
 				"Parse Error (Line:{0}, Index:{1}){2}{3}",
 				context.LineNumber,
 				context.LineIndex,
 				Environment.NewLine,
 				lineText
 			));
+
+			exception.Text = context.Text;
+			exception.LineText = lineText;
+			exception.Index = context.Index;
+			exception.LineNumber = context.LineNumber;
+			exception.LineIndex = context.LineIndex;
+
+			throw exception;
 		}
 	}
 }
