@@ -229,13 +229,16 @@ namespace Hikipuro.Text {
 			}
 
 			// テキストの終わりまでマッチを試す
-			while (index < text.Length) {
+			int length = text.Length;
+			while (index < length) {
 				// 改行チェック
 				bool isMatchNewLine = false;
-				Match match = newLineRegex.Match(text, index, 2);
-				if (match.Success && match.Index == index) {
-					isMatchNewLine = true;
-					lineIndexList.Add(index + match.Length);
+				if (length > index + 2) {
+					Match match = newLineRegex.Match(text, index, 2);
+					if (match.Success && match.Index == index) {
+						isMatchNewLine = true;
+						lineIndexList.Add(index + match.Length);
+					}
 				}
 
 				// 登録されたパターンでマッチを試す
