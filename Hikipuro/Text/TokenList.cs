@@ -54,8 +54,11 @@ namespace Hikipuro.Text {
 			if (Count <= 0) {
 				return null;
 			}
-			int index = IndexOf(token);
-			return this[(index + 1) == Count ? 0 : (index + 1)];
+			int index = IndexOf(token) + 1;
+			if (index >= Count) {
+				return null;
+			}
+			return this[index];
 		}
 
 		/// <summary>
@@ -69,8 +72,11 @@ namespace Hikipuro.Text {
 			if (Count <= 0) {
 				return null;
 			}
-			int index = IndexOf(token);
-			return this[(index - 1) == -1 ? Count - 1 : (index - 1)];
+			int index = IndexOf(token) - 1;
+			if (index < 0) {
+				return null;
+			}
+			return this[index];
 		}
 
 		/// <summary>

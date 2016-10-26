@@ -124,7 +124,7 @@ namespace Tokenizer.Sample {
 				// 波括弧 } または 角括弧 ]
 				if (token.IsMemberOf(closeBlockGroup)) {
 					indentSize--;
-					if (token.Next.IsTypeOf(JsonTokenType.Comma)) {
+					if (token.Next != null && token.Next.IsTypeOf(JsonTokenType.Comma)) {
 						stringBuilder.Append(token.Text);
 						continue;
 					}
@@ -133,7 +133,7 @@ namespace Tokenizer.Sample {
 					continue;
 				}
 				// 文字列, 数値, null, true, false
-				if (token.Next.IsMemberOf(closeBlockGroup)) {
+				if (token.Next != null && token.Next.IsMemberOf(closeBlockGroup)) {
 					stringBuilder.Append(token.Text);
 					JsonNewLine(stringBuilder, indentSize - 1);
 					continue;
