@@ -46,7 +46,7 @@ namespace Hikipuro.Text {
 			/// <summary>
 			/// 処理中の行の文字位置.
 			/// </summary>
-			public int LineIndex = 0;
+			public int LineIndex = 1;
 
 			/// <summary>
 			/// トークンのマッチ用パターン.
@@ -217,7 +217,7 @@ namespace Hikipuro.Text {
 
 				// 改行位置に到達した時
 				if (context.LineIndexList[context.LineNumber] == context.Index) {
-					context.LineIndex = 0;
+					context.LineIndex = 1;
 					context.LineNumber++;
 				}
 
@@ -341,10 +341,8 @@ namespace Hikipuro.Text {
 				string lineText = context.Text.Substring(index, match.Index - index);
 				//lineText.Replace("\t", "    ");
 				return lineText;
-			} else if (index != 0) {
-				return context.Text.Substring(index);
 			}
-			return string.Empty;
+			return context.Text.Substring(index);
 		}
 
 		/// <summary>
