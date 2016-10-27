@@ -87,17 +87,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Hikipuro\Text\BeforeAddTokenEventArgs.cs" />
-    <Compile Include="Hikipuro\Text\BeforeAddTokenEventHandler.cs" />
-    <Compile Include="Hikipuro\Text\ParseException.cs" />
-    <Compile Include="Hikipuro\Text\Token.cs" />
-    <Compile Include="Hikipuro\Text\TokenAddedEventArgs.cs" />
-    <Compile Include="Hikipuro\Text\TokenAddedEventHandler.cs" />
-    <Compile Include="Hikipuro\Text\Tokenizer.cs" />
-    <Compile Include="Hikipuro\Text\TokenList.cs" />
-    <Compile Include="Hikipuro\Text\TokenMatch.cs" />
-    <Compile Include="Hikipuro\Text\TokenPattern.cs" />
-    <Compile Include="Hikipuro\Text\TokenTypeGroup.cs" />
+    <Compile Include="Hikipuro\Text\Tokenizer\BeforeAddTokenEventArgs.cs" />
+    <Compile Include="Hikipuro\Text\Tokenizer\BeforeAddTokenEventHandler.cs" />
+    <Compile Include="Hikipuro\Text\Tokenizer\ParseException.cs" />
+    <Compile Include="Hikipuro\Text\Tokenizer\Token.cs" />
+    <Compile Include="Hikipuro\Text\Tokenizer\TokenAddedEventArgs.cs" />
+    <Compile Include="Hikipuro\Text\Tokenizer\TokenAddedEventHandler.cs" />
+    <Compile Include="Hikipuro\Text\Tokenizer\Tokenizer.cs" />
+    <Compile Include="Hikipuro\Text\Tokenizer\TokenList.cs" />
+    <Compile Include="Hikipuro\Text\Tokenizer\TokenMatch.cs" />
+    <Compile Include="Hikipuro\Text\Tokenizer\TokenPattern.cs" />
+    <Compile Include="Hikipuro\Text\Tokenizer\TokenTypeGroup.cs" />
     <Compile Include="Sample\CSVTokenizer.cs" />
     <Compile Include="Sample\Form1.cs">
       <SubType>Form</SubType>

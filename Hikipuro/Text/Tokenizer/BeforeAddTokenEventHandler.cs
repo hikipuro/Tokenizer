@@ -1,4 +1,4 @@
-﻿namespace Hikipuro.Text {
+﻿namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
 	/// リストにトークンを追加する直前に呼ばれるイベントのデリゲート.
 	/// </summary>

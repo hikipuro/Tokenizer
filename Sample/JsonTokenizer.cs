@@ -1,4 +1,4 @@
-﻿using Hikipuro.Text;
+﻿using Hikipuro.Text.Tokenizer;
 using System;
 using System.Collections.Generic;
 using System.Text;

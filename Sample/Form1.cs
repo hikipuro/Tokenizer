@@ -1,4 +1,4 @@
-﻿using Hikipuro.Text;
+﻿using Hikipuro.Text.Tokenizer;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -174,7 +174,7 @@ namespace Tokenizer.Sample {
 				act.Invoke(1);
 			}
 			sw.Stop();
-			return sw.ElapsedMilliseconds / (long)iterations;
+			return sw.ElapsedMilliseconds / iterations;
 		}
 	}
 }

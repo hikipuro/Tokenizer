@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Hikipuro.Text {
+namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
 	/// トークンのマッチした場所.
 	/// </summary>

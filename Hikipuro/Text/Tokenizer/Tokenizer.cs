@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Hikipuro.Text {
+namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
 	/// 文字列をトークンに分割するためのクラス.
 	/// </summary>

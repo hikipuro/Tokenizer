@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Hikipuro.Text {
+namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
 	/// トークンの種類のグループ.
 	/// </summary>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hikipuro.Text {
+namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
 	/// TokenAddedEventHandler の引数.
 	/// </summary>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hikipuro.Text {
+namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
 	/// トークン 1 つ分.
 	/// </summary>

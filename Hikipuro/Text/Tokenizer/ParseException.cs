@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hikipuro.Text {
+namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
 	/// Tokenizer のパースエラー.
 	/// Tokenizer.Tokenize() で使用する.
