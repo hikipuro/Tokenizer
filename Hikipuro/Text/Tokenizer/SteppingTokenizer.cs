@@ -123,6 +123,14 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
+		/// 現在の行の文字列を取得する.
+		/// </summary>
+		/// <returns></returns>
+		public string GetLine() {
+			return GetLine(context);
+		}
+
+		/// <summary>
 		/// トークンのマッチを試す.
 		/// マッチしなかった場合, null を返す.
 		/// </summary>
