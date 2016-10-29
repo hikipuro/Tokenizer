@@ -17,7 +17,7 @@ namespace Hikipuro.Text.Tokenizer {
 				return;
 			}
 			token.TokenList = this;
-			Add(token);
+			base.Add(token);
 		}
 
 		/// <summary>

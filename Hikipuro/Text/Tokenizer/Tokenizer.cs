@@ -22,7 +22,7 @@ namespace Hikipuro.Text.Tokenizer {
 		/// <summary>
 		/// Tokenize() の呼び出しごとに作られるコンテキスト.
 		/// </summary>
-		class Context {
+		public class Context {
 			/// <summary>
 			/// 処理対象の文字列.
 			/// </summary>
@@ -232,6 +232,26 @@ namespace Hikipuro.Text.Tokenizer {
 			}
 
 			return tokens;
+		}
+
+		public SteppingTokenizer<TokenType> CreateSteppingTokenizer(string text) {
+			if (text == null || text == string.Empty) {
+				return null;
+			}
+
+			// コンテキストオブジェクトを作成する
+			Context context = new Context();
+			context.Text = text;
+
+			// マッチパターンの準備
+			context.Patterns = new TokenPattern<TokenType>[patterns.Count];
+			patterns.CopyTo(context.Patterns);
+
+			// 改行位置をチェックしておく
+			context.LineIndexList = CreateLineIndexList(text);
+
+			SteppingTokenizer<TokenType> tokenizer = new SteppingTokenizer<TokenType>(context);
+			return tokenizer;
 		}
 
 		/// <summary>
