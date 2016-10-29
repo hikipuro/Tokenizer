@@ -173,6 +173,53 @@ namespace UnitTest {
 		}
 
 		[TestMethod, TestCategory("SteppingTokenizer")]
+		public void NextWithTokenType2() {
+			string text = "1234567";
+
+			// Tokenizer オブジェクトを準備する
+			Tokenizer<int> tokenizer = new Tokenizer<int>();
+
+			// トークンの分解規則を追加する
+			tokenizer.AddPattern(0, "\\d");
+			tokenizer.AddPattern(1, "[123]");
+
+			// 作成する
+			SteppingTokenizer<int> stepping = tokenizer.CreateSteppingTokenizer(text);
+			Assert.AreNotEqual(null, stepping);
+			Assert.AreEqual(null, stepping.Current, "incorrect token");
+
+			// パラメータ付き Next() の実行
+			Token<int> token = null;
+			token = stepping.Next();
+			Assert.AreEqual(0, token.Type, "incorrect token type");
+			Assert.AreEqual("1", token.Text, "incorrect token text");
+
+			token = stepping.Back();
+			Assert.AreEqual(null, token, "incorrect token type");
+
+			token = stepping.Next();
+			Assert.AreEqual(0, token.Type, "incorrect token type");
+			Assert.AreEqual("1", token.Text, "incorrect token text");
+
+			token = stepping.Next(1);
+			Assert.AreEqual(1, token.Type, "incorrect token type");
+			Assert.AreEqual("2", token.Text, "incorrect token text");
+
+			token = stepping.Next(1);
+			Assert.AreEqual(1, token.Type, "incorrect token type");
+			Assert.AreEqual("3", token.Text, "incorrect token text");
+
+			token = stepping.Back();
+			Assert.AreEqual(1, token.Type, "incorrect token type");
+
+			token = stepping.Back();
+			Assert.AreEqual(0, token.Type, "incorrect token type");
+
+			token = stepping.Back();
+			Assert.AreEqual(null, token, "incorrect token type");
+		}
+
+		[TestMethod, TestCategory("SteppingTokenizer")]
 		public void Back() {
 			string text = TestUtility.ReadTextFile("JSON/Test1.json");
 

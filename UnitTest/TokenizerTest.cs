@@ -441,6 +441,9 @@ namespace UnitTest {
 			tokenizer.AddPattern(TokenType.String, @"\G""((?<=\\)""|[^\r\n""])*""");
 			tokenizer.AddPattern(TokenType.Space, @"\G\s+");
 
+			TokenList<TokenType> correctTokens = tokenizer.Tokenize(text);
+			Assert.AreEqual(123, correctTokens.Count, "incorrect token count");
+
 			List<Thread> threads = new List<Thread>();
 			List<TokenList<TokenType>> tokensList = new List<TokenList<TokenType>>();
 			for (int i = 0; i < threadCount; i++) {
@@ -467,17 +470,13 @@ namespace UnitTest {
 				Assert.AreEqual(123, tokens.Count, "incorrect token count");
 			}
 
-			for (int i = 0; i < tokensList[0].Count; i++) {
-				List<Token<TokenType>> tokenList = new List<Token<TokenType>>();
-				for (int n = 0; n < tokensList.Count; n++) {
-					Token<TokenType> token = tokensList[n][i];
-					tokenList.Add(token);
-				}
+			for (int i = 0; i < correctTokens.Count; i++) {
+				Token<TokenType> correctToken = correctTokens[i];
 
-				Token<TokenType> checkToken = tokenList[0];
-				for (int n = 1; n < tokensList.Count; n++) {
-					Token<TokenType> checkToken2 = tokenList[n];
-					Assert.AreEqual(checkToken.Text, checkToken2.Text, "incorrect token text");
+				List<Token<TokenType>> tokenList = new List<Token<TokenType>>();
+				for (int n = 0; n < threadCount; n++) {
+					Token<TokenType> token = tokensList[n][i];
+					Assert.AreEqual(correctToken.Text, token.Text, "incorrect token text");
 				}
 			}
 		}
