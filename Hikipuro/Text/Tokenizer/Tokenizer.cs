@@ -142,6 +142,20 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
+		/// マッチパターンを取り除く.
+		/// </summary>
+		/// <param name="type">トークンの種類.</param>
+		public void RemovePattern(TokenType type) {
+			foreach (TokenPattern<TokenType> pattern in patterns) {
+				if (pattern.Type.Equals(type) == false) {
+					continue;
+				}
+				patterns.Remove(pattern);
+				break;
+			}
+		}
+
+		/// <summary>
 		/// 引数で指定したトークンの種類が, パターンに追加されているかチェックする.
 		/// </summary>
 		/// <param name="type">トークンの種類.</param>
@@ -234,6 +248,11 @@ namespace Hikipuro.Text.Tokenizer {
 			return tokens;
 		}
 
+		/// <summary>
+		/// ステップ実行用のオブジェクトを作成する.
+		/// </summary>
+		/// <param name="text">処理対象の文字列.</param>
+		/// <returns>ステップ実行用のオブジェクト</returns>
 		public SteppingTokenizer<TokenType> CreateSteppingTokenizer(string text) {
 			if (text == null || text == string.Empty) {
 				return null;

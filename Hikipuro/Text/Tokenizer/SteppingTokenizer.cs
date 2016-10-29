@@ -15,6 +15,23 @@ namespace Hikipuro.Text.Tokenizer {
 		Tokenizer<TokenType>.Context context;
 
 		/// <summary>
+		/// 現在のトークン.
+		/// </summary>
+		Token<TokenType> token;
+
+		/// <summary>
+		/// マッチしたトークンのリスト.
+		/// </summary>
+		TokenList<TokenType> tokens;
+
+		/// <summary>
+		/// 現在のトークンを取得する.
+		/// </summary>
+		public Token<TokenType> Current {
+			get { return token; }
+		}
+
+		/// <summary>
 		/// 次の項目があるかチェックする.
 		/// true: 次の項目がある, false: ない.
 		/// </summary>
@@ -28,6 +45,29 @@ namespace Hikipuro.Text.Tokenizer {
 		/// <param name="context"></param>
 		public SteppingTokenizer(Tokenizer<TokenType>.Context context) {
 			this.context = context;
+			tokens = new TokenList<TokenType>();
+		}
+
+		/// <summary>
+		/// デストラクタ.
+		/// </summary>
+		~SteppingTokenizer() {
+			token = null;
+			if (tokens != null) {
+				tokens.Clear();
+				tokens = null;
+			}
+		}
+
+		/// <summary>
+		/// 処理位置をリセットする.
+		/// </summary>
+		public void Reset() {
+			context.Index = 0;
+			context.LineNumber = 1;
+			context.LineIndex = 1;
+			token = null;
+			tokens.Clear();
 		}
 
 		/// <summary>
@@ -45,6 +85,7 @@ namespace Hikipuro.Text.Tokenizer {
 			}
 
 			// マッチした場合
+			tokens.Add(token);
 
 			// インデックスの位置を動かしておく
 			int matchLength = token.Length;
@@ -57,6 +98,7 @@ namespace Hikipuro.Text.Tokenizer {
 				context.LineNumber++;
 			}
 
+			this.token = token;
 			return token;
 		}
 
@@ -76,6 +118,7 @@ namespace Hikipuro.Text.Tokenizer {
 			}
 
 			// マッチした場合
+			tokens.Add(token);
 
 			// インデックスの位置を動かしておく
 			int matchLength = token.Length;
@@ -88,6 +131,34 @@ namespace Hikipuro.Text.Tokenizer {
 				context.LineNumber++;
 			}
 
+			this.token = token;
+			return token;
+		}
+
+		/// <summary>
+		/// 処理位置をトークン 1 つ分戻す.
+		/// 1 つ前のトークンが存在しない場合は null を返す.
+		/// </summary>
+		/// <returns>1 つ前のトークン.</returns>
+		public Token<TokenType> Back() {
+			if (token == null || tokens.Count < 2) {
+				context.Index = 0;
+				context.LineNumber = 1;
+				context.LineIndex = 1;
+				return null;
+			}
+
+			// 1 つ前のトークンを取得する
+			int position = tokens.Count - 1;
+			Token<TokenType> prevToken = tokens[position - 1];
+			tokens.RemoveAt(position);
+
+			// 処理位置を戻す
+			context.Index = token.Index;
+			context.LineNumber = token.LineNumber;
+			context.LineIndex = token.LineIndex;
+
+			token = prevToken;
 			return token;
 		}
 
