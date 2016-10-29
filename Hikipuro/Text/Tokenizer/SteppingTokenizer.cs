@@ -141,7 +141,16 @@ namespace Hikipuro.Text.Tokenizer {
 		/// </summary>
 		/// <returns>1 つ前のトークン.</returns>
 		public Token<TokenType> Back() {
-			if (token == null || tokens.Count < 2) {
+			if (token == null) {
+				context.Index = 0;
+				context.LineNumber = 1;
+				context.LineIndex = 1;
+				return null;
+			}
+
+			if (tokens.Count == 1) {
+				token = null;
+				tokens.RemoveAt(0);
 				context.Index = 0;
 				context.LineNumber = 1;
 				context.LineIndex = 1;
