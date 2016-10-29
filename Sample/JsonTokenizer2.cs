@@ -32,6 +32,7 @@ namespace Tokenizer.Sample {
 			SteppingTokenizer<TokenType> steppingTokenizer
 				= tokenizer.CreateSteppingTokenizer(text);
 
+			// while と HasNext で要素を巡回
 			while (steppingTokenizer.HasNext) {
 				Token<TokenType> token = steppingTokenizer.Next();
 				switch (token.Type) {
@@ -51,6 +52,20 @@ namespace Tokenizer.Sample {
 				);
 				//*/
 			}
+
+			/*
+			// IEnumerable インターフェイスで巡回
+			foreach (Token<TokenType> token in steppingTokenizer) {
+				switch (token.Type) {
+				case TokenType.NewLine:
+				case TokenType.Space:
+					break;
+				default:
+					tokens.Add(token);
+					break;
+				}
+			}
+			//*/
 
 			return tokens;
 		}

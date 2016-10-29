@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
@@ -6,7 +8,7 @@ namespace Hikipuro.Text.Tokenizer {
 	/// Tokenizer.CreateSteppingTokenizer() で作成する.
 	/// </summary>
 	/// <typeparam name="TokenType"></typeparam>
-	public class SteppingTokenizer<TokenType> where TokenType : struct {
+	public class SteppingTokenizer<TokenType> : IEnumerable<Token<TokenType>> where TokenType : struct {
 		/// <summary>
 		/// コンテキスト.
 		/// </summary>
@@ -239,6 +241,25 @@ namespace Hikipuro.Text.Tokenizer {
 				return lineText;
 			}
 			return context.Text.Substring(index);
+		}
+
+		/// <summary>
+		/// IEnumerable の実装.
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerator<Token<TokenType>> GetEnumerator() {
+			while (HasNext) {
+				Token<TokenType> token = Next();
+				yield return token;
+			}
+		}
+
+		/// <summary>
+		/// IEnumerable の実装.
+		/// </summary>
+		/// <returns></returns>
+		IEnumerator IEnumerable.GetEnumerator() {
+			return GetEnumerator();
 		}
 	}
 }

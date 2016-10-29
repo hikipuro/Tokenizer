@@ -167,8 +167,11 @@ namespace Tokenizer.Sample {
 		/// <param name="iterations"></param>
 		/// <returns></returns>
 		private static long Benchmark(System.Action<int> act, int iterations) {
+			if (iterations <= 0) {
+				return 0;
+			}
 			GC.Collect();
-			act.Invoke(1); // run once outside of loop to avoid initialization costs
+			//act.Invoke(1); // run once outside of loop to avoid initialization costs
 			Stopwatch sw = Stopwatch.StartNew();
 			for (int i = 0; i < iterations; i++) {
 				act.Invoke(1);
