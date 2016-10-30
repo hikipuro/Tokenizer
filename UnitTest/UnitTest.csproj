@@ -55,6 +55,7 @@
     <Compile Include="TestUtility.cs" />
     <Compile Include="TokenizerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TokenListTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="JSON\Test1.json">

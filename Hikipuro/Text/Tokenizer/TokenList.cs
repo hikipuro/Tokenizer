@@ -11,7 +11,7 @@ namespace Hikipuro.Text.Tokenizer {
 		/// <summary>
 		/// Token オブジェクトを追加する.
 		/// </summary>
-		/// <param name="token"></param>
+		/// <param name="token">トークン.</param>
 		public new void Add(Token<TokenType> token) {
 			if (token == null) {
 				return;
@@ -34,11 +34,38 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
+		/// Token オブジェクトを取り除く.
+		/// </summary>
+		/// <param name="token">トークン.</param>
+		public new void Remove(Token<TokenType> token) {
+			if (token == null) {
+				return;
+			}
+			if (Contains(token) == false) {
+				return;
+			}
+			token.TokenList = null;
+			base.Remove(token);
+		}
+
+		/// <summary>
+		/// Token オブジェクトを取り除く.
+		/// </summary>
+		/// <param name="index">インデックス番号.</param>
+		public new void RemoveAt(int index) {
+			Token<TokenType> token = this[index];
+			Remove(token);
+		}
+
+		/// <summary>
 		/// リストの最後から, インデックス値を指定して要素を取得する.
 		/// </summary>
 		/// <param name="index">最後の要素からのインデックス番号.</param>
 		/// <returns>トークン.</returns>
 		public Token<TokenType> Last(int index = 0) {
+			if (Count <= 0) {
+				return null;
+			}
 			int lastIndex = Count - 1;
 			return this[lastIndex - index];
 		}
@@ -51,7 +78,10 @@ namespace Hikipuro.Text.Tokenizer {
 		/// <param name="token">トークン.</param>
 		/// <returns>1 つ次の要素.</returns>
 		public Token<TokenType> Next(Token<TokenType> token) {
-			if (Count <= 0) {
+			if (token == null || Count <= 0) {
+				return null;
+			}
+			if (Contains(token) == false) {
 				return null;
 			}
 			int index = IndexOf(token) + 1;
@@ -69,7 +99,10 @@ namespace Hikipuro.Text.Tokenizer {
 		/// <param name="token">トークン.</param>
 		/// <returns>1 つ前の要素.</returns>
 		public Token<TokenType> Prev(Token<TokenType> token) {
-			if (Count <= 0) {
+			if (token == null || Count <= 0) {
+				return null;
+			}
+			if (Contains(token) == false) {
 				return null;
 			}
 			int index = IndexOf(token) - 1;
