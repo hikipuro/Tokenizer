@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
-	/// トークンのリスト.
-	/// 分解された文字列全体が, ここにリストとして保存される.
+	/// Token list.
+	/// This object has all tokenized text list.
 	/// </summary>
-	/// <typeparam name="TokenType">トークンの種類.</typeparam>
+	/// <typeparam name="TokenType">Token type.</typeparam>
 	public class TokenList<TokenType> : List<Token<TokenType>> where TokenType : struct {
 		/// <summary>
-		/// Token オブジェクトを追加する.
+		/// Add Token object to list.
 		/// </summary>
-		/// <param name="token">トークン.</param>
+		/// <param name="token">Token.</param>
 		public new void Add(Token<TokenType> token) {
 			if (token == null) {
 				return;
@@ -21,9 +21,9 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// TokenMatch オブジェクトを Token オブジェクトに変換してから追加する.
+		/// Add Token object to list, before convert TokenMatch object to Token object.
 		/// </summary>
-		/// <param name="tokenMatch">トークンのマッチした場所を表すオブジェクト.</param>
+		/// <param name="tokenMatch">Token match object.</param>
 		public void Add(TokenMatch<TokenType> tokenMatch) {
 			if (tokenMatch == null) {
 				return;
@@ -34,7 +34,7 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// Token オブジェクトを取り除く.
+		/// Remove Token object from list.
 		/// </summary>
 		/// <param name="token">トークン.</param>
 		public new void Remove(Token<TokenType> token) {
@@ -49,19 +49,19 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// Token オブジェクトを取り除く.
+		/// Remove Token object from list.
 		/// </summary>
-		/// <param name="index">インデックス番号.</param>
+		/// <param name="index">Index number of target Token.</param>
 		public new void RemoveAt(int index) {
 			Token<TokenType> token = this[index];
 			Remove(token);
 		}
 
 		/// <summary>
-		/// リストの最後から, インデックス値を指定して要素を取得する.
+		/// Get Token object from last index of list.
 		/// </summary>
-		/// <param name="index">最後の要素からのインデックス番号.</param>
-		/// <returns>トークン.</returns>
+		/// <param name="index">Last index number of list.</param>
+		/// <returns>Token.</returns>
 		public Token<TokenType> Last(int index = 0) {
 			if (Count <= 0) {
 				return null;
@@ -71,12 +71,12 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 引数で指定されたトークンの 1 つ次の要素を取得する.
-		/// リストの端に達した場合は巡回する.
-		/// 要素の数が 0 の場合は null を返す.
+		/// Get next token of specified in the argument.
+		/// Rewind position when reached last item.
+		/// Return null when TokenList doesn't have any items.
 		/// </summary>
-		/// <param name="token">トークン.</param>
-		/// <returns>1 つ次の要素.</returns>
+		/// <param name="token">Token.</param>
+		/// <returns>Next token.</returns>
 		public Token<TokenType> Next(Token<TokenType> token) {
 			if (token == null || Count <= 0) {
 				return null;
@@ -92,12 +92,12 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 引数で指定されたトークンの 1 つ前の要素を取得する.
-		/// リストの端に達した場合は巡回する.
-		/// 要素の数が 0 の場合は null を返す.
+		/// Get previous token of specified in the argument.
+		/// Return last token when reached first item.
+		/// Return null when TokenList doesn't have any items.
 		/// </summary>
-		/// <param name="token">トークン.</param>
-		/// <returns>1 つ前の要素.</returns>
+		/// <param name="token">Token.</param>
+		/// <returns>Previous token.</returns>
 		public Token<TokenType> Prev(Token<TokenType> token) {
 			if (token == null || Count <= 0) {
 				return null;
@@ -113,13 +113,14 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 2 つのトークン間の距離を, トークンの数で取得する.
-		/// 同じトークン: 0, 隣接しているトークン: 1.
-		/// TODO: IndexOf() が遅そうなので, 高速化する.
+		/// Return distance in token count.
+		/// This method compares Token A and B position.
+		/// [Return] Same token: 0, Adjacent token: 1.
+		/// TODO: optimize IndexOf() method.
 		/// </summary>
-		/// <param name="tokenA">トークン A.</param>
-		/// <param name="tokenB">トークン B.</param>
-		/// <returns>トークン数.</returns>
+		/// <param name="tokenA">Token A.</param>
+		/// <param name="tokenB">Token B.</param>
+		/// <returns>Token count.</returns>
 		public int GetDistance(Token<TokenType> tokenA, Token<TokenType> tokenB) {
 			int indexA = IndexOf(tokenA);
 			int indexB = IndexOf(tokenB);
@@ -127,11 +128,11 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 2 つのトークンの位置を入れ替える.
-		/// TODO: IndexOf() が遅そうなので, 高速化する.
+		/// Swap two tokens position.
+		/// TODO: optimize IndexOf() method.
 		/// </summary>
-		/// <param name="tokenA">トークン A.</param>
-		/// <param name="tokenB">トークン B.</param>
+		/// <param name="tokenA">Token A.</param>
+		/// <param name="tokenB">Token B.</param>
 		public void Swap(Token<TokenType> tokenA, Token<TokenType> tokenB) {
 			int indexA = IndexOf(tokenA);
 			int indexB = IndexOf(tokenB);
@@ -139,10 +140,10 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 2 つのトークンの位置を入れ替える.
+		/// Swap two tokens position.
 		/// </summary>
-		/// <param name="indexA">トークン A のインデックス.</param>
-		/// <param name="indexB">トークン B のインデックス.</param>
+		/// <param name="indexA">Index of Token A.</param>
+		/// <param name="indexB">Index of Token B.</param>
 		public void Swap(int indexA, int indexB) {
 			Token<TokenType> token = this[indexA];
 			this[indexA] = this[indexB];

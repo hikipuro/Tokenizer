@@ -4,86 +4,87 @@ using System.Text.RegularExpressions;
 
 namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
-	/// 文字列をトークンに分割するためのクラス.
+	/// Tokenizer.
 	/// </summary>
-	/// <typeparam name="TokenType">トークンの種類.</typeparam>
+	/// <typeparam name="TokenType">Token type.</typeparam>
 	public class Tokenizer<TokenType> where TokenType : struct {
 		/// <summary>
-		/// リストにトークンを追加する直前に呼ばれるイベント.
-		/// イベントハンドラ内で e.Cancel = true; を設定したトークンは追加しない.
+		/// Event for a matched token will add to TokenList
+		// - e.Cancel = true;
+		//   this is specify that don't add to list
 		/// </summary>
 		public event BeforeAddTokenEventHandler<TokenType> BeforeAddToken;
 
 		/// <summary>
-		/// リストにトークンが追加された直後に呼ばれるイベント.
+		/// Event for a matched token was added to TokenList
 		/// </summary>
 		public event TokenAddedEventHandler<TokenType> TokenAdded;
 
 		/// <summary>
-		/// Tokenize() の呼び出しごとに作られるコンテキスト.
+		/// This context will create each Tokenize() method calling.
 		/// </summary>
 		public class Context {
 			/// <summary>
-			/// 処理対象の文字列.
+			/// Processing target text.
 			/// </summary>
 			public string Text;
 
 			/// <summary>
-			/// 行の開始位置のインデックス番号のリスト.
+			/// List of start position of each line.
 			/// </summary>
 			public List<int> LineIndexList;
 
 			/// <summary>
-			/// 処理中の文字位置.
+			/// Processing char index.
 			/// </summary>
 			public int Index = 0;
 
 			/// <summary>
-			/// 処理中の行番号.
+			/// Processing line number.
 			/// </summary>
 			public int LineNumber = 1;
 
 			/// <summary>
-			/// 処理中の行の文字位置.
+			/// Processing char index of current line.
 			/// </summary>
 			public int LineIndex = 1;
 
 			/// <summary>
-			/// トークンのマッチ用パターン.
-			/// AddPattern() で追加する.
+			/// Match patterns.
+			/// To add this list, use Tokenizer.AddPattern() method.
 			/// </summary>
 			public TokenPattern<TokenType>[] Patterns;
 
 			/// <summary>
-			/// コンストラクタ.
+			/// Constructor.
 			/// </summary>
 			public Context() {
 			}
 		}
 
 		/// <summary>
-		/// System.Threading.Sleep() を定期的に入れるための値.
-		/// デフォルト値: 0.
-		/// SleepWait で指定された回数分ループするごとに 1 回スリープする (トークンの個数).
-		/// 0 以下の値を入れるとスリープしないようになる.
+		/// To insert System.Threading.Sleep() in constant time.
+		/// Defalt value: 0.
+		/// Tokenize process loop reached "SleepWait" count when sleep once (token count).
+		/// Don't sleep when this value is zero or more small value.
 		/// </summary>
 		public int SleepWait = 0;
 
 		/// <summary>
-		/// トークンのマッチ用パターン.
-		/// AddPattern() で追加する.
+		/// Token match pattern list.
+		/// To add this list, use AddPattern() method.
 		/// </summary>
 		List<TokenPattern<TokenType>> patterns;
 
 		/// <summary>
-		/// コンストラクタ.
+		/// Constructor.
 		/// </summary>
 		public Tokenizer() {
 			patterns = new List<TokenPattern<TokenType>>();
 		}
 
 		/// <summary>
-		/// デストラクタ.
+		/// Destructor.
 		/// </summary>
 		~Tokenizer() {
 			if (patterns != null) {
@@ -103,11 +104,11 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 正規表現のマッチパターンを追加する.
+		/// Add to a Regex match pattern.
 		/// </summary>
-		/// <param name="type">トークンの種類.</param>
-		/// <param name="patternText">マッチ用の正規表現文字列.</param>
-		/// <returns>追加されたパターン.</returns>
+		/// <param name="type">Token type.</param>
+		/// <param name="patternText">Regex pattern text.</param>
+		/// <returns>Added pattern object.</returns>
 		public TokenPattern<TokenType> AddPattern(TokenType type, string patternText) {
 			if (patternText == null || patternText == string.Empty) {
 				return null;
@@ -122,12 +123,12 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 正規表現のマッチパターンを追加する.
+		/// Add to a Regex match pattern.
 		/// </summary>
-		/// <param name="type">トークンの種類.</param>
-		/// <param name="patternText">マッチ用の正規表現文字列.</param>
+		/// <param name="type">Token type.</param>
+		/// <param name="patternText">Regex pattern text.</param>
 		/// <param name="options">正規表現のオプション.</param>
-		/// <returns>追加されたパターン.</returns>
+		/// <returns>Added pattern object.</returns>
 		public TokenPattern<TokenType> AddPattern(TokenType type, string patternText, RegexOptions options) {
 			if (patternText == null || patternText == string.Empty) {
 				return null;
@@ -142,9 +143,9 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// マッチパターンを取り除く.
+		/// Remove Regex pattern.
 		/// </summary>
-		/// <param name="type">トークンの種類.</param>
+		/// <param name="type">Token type.</param>
 		public void RemovePattern(TokenType type) {
 			foreach (TokenPattern<TokenType> pattern in patterns) {
 				if (pattern.Type.Equals(type) == false) {
@@ -156,10 +157,10 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 引数で指定したトークンの種類が, パターンに追加されているかチェックする.
+		/// Check for already have a pattern type specified in argument.
 		/// </summary>
-		/// <param name="type">トークンの種類.</param>
-		/// <returns>true: すでに追加されている, false: 追加されていない.</returns>
+		/// <param name="type">Token type.</param>
+		/// <returns>true: have, false: not have.</returns>
 		public bool HasPatternType(TokenType type) {
 			foreach (TokenPattern<TokenType> pattern in patterns) {
 				if (pattern.Type.Equals(type)) {
@@ -170,54 +171,54 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 登録されたパターンを使ってトークンに分割する.
-		/// マッチに失敗した場合, ParseException 例外を発生させる.
+		/// Tokenize.
+		/// Throw ParseException when failed match.
 		/// </summary>
-		/// <param name="text">処理対象の文字列.</param>
-		/// <returns>トークンのリスト.</returns>
+		/// <param name="text">target text.</param>
+		/// <returns>Token list.</returns>
 		public TokenList<TokenType> Tokenize(string text) {
-			// 戻り値
+			// return value
 			TokenList<TokenType> tokens = new TokenList<TokenType>();
 
 			if (text == null || text == string.Empty) {
 				return tokens;
 			}
 
-			// コンテキストオブジェクトを作成する
+			// create context object
 			Context context = new Context();
 			context.Text = text;
 
-			// マッチパターンの準備
+			// prepare patterns
 			context.Patterns = new TokenPattern<TokenType>[patterns.Count];
 			patterns.CopyTo(context.Patterns);
 
-			// 改行位置をチェックしておく
+			// check start of line indices
 			context.LineIndexList = CreateLineIndexList(text);
 
-			// Sleep() を定期的に入れる用
+			// to Sleep() constant count
 			int loopCount = 0;
 			int sleepWait = SleepWait;
 
-			// テキストの終わりまでマッチを試す
+			// try to match for last text index
 			while (context.Index < text.Length) {
-				// 登録されたパターンでマッチを試す
+				// try to match registered patterns
 				TokenMatch<TokenType> tokenMatch = TryMatchToken(context);
 
-				// マッチしなかった時は, 例外を投げる
+				// throw exception when not matched
 				if (tokenMatch == null) {
 					ThrowParseException(context);
 				}
 
-				// マッチした場合
+				// matched
 
-				// インデックスの位置を動かしておく
+				// move char positions
 				int matchLength = tokenMatch.Match.Length;
 				context.Index += matchLength;
 				context.LineIndex += matchLength;
 
 				if (BeforeAddToken != null) {
-					// 追加前イベントが登録されている場合は実行する
-					// false が返ってきた場合はトークンリストに追加しない
+					// dispatch event if registered event handlers
+					// don't add token to list when Cancel is false
 					BeforeAddTokenEventArgs<TokenType> args
 						= new BeforeAddTokenEventArgs<TokenType>(tokenMatch);
 					BeforeAddToken(this, args);
@@ -225,17 +226,17 @@ namespace Hikipuro.Text.Tokenizer {
 						AddToken(tokens, tokenMatch);
 					}
 				} else {
-					// トークンをリストに追加する
+					// add token to list
 					AddToken(tokens, tokenMatch);
 				}
 
-				// 改行位置に到達した時
+				// when arrive on new line position
 				if (context.LineIndexList[context.LineNumber] == context.Index) {
 					context.LineIndex = 1;
 					context.LineNumber++;
 				}
 
-				// Sleep() を定期的に入れる
+				// insert Sleep() constant
 				if (sleepWait > 0) {
 					loopCount++;
 					if (loopCount > sleepWait) {
@@ -249,24 +250,24 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// ステップ実行用のオブジェクトを作成する.
+		/// Create one by one Tokenizer.
 		/// </summary>
-		/// <param name="text">処理対象の文字列.</param>
-		/// <returns>ステップ実行用のオブジェクト</returns>
+		/// <param name="text">target text.</param>
+		/// <returns>Stepping tokenizer</returns>
 		public SteppingTokenizer<TokenType> CreateSteppingTokenizer(string text) {
 			if (text == null || text == string.Empty) {
 				return null;
 			}
 
-			// コンテキストオブジェクトを作成する
+			// create context object
 			Context context = new Context();
 			context.Text = text;
 
-			// マッチパターンの準備
+			// prepare patterns
 			context.Patterns = new TokenPattern<TokenType>[patterns.Count];
 			patterns.CopyTo(context.Patterns);
 
-			// 改行位置をチェックしておく
+			// check start of line indices
 			context.LineIndexList = CreateLineIndexList(text);
 
 			SteppingTokenizer<TokenType> tokenizer = new SteppingTokenizer<TokenType>(context);
@@ -274,10 +275,10 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 改行位置のインデックス番号のリストを返す.
+		/// Return each start of line index.
 		/// </summary>
-		/// <param name="text">処理対象の文字列.</param>
-		/// <returns>改行位置のリスト.</returns>
+		/// <param name="text">target text.</param>
+		/// <returns>List of index.</returns>
 		private List<int> CreateLineIndexList(string text) {
 			List<int> lineIndexList = new List<int>();
 			lineIndexList.Add(0);
@@ -296,41 +297,41 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// トークンのマッチを試す.
-		/// マッチしなかった場合, null を返す.
+		/// Try to match token.
+		/// Return null when don't match.
 		/// </summary>
-		/// <param name="context">コンテキスト.</param>
-		/// <returns>マッチオブジェクト.</returns>
+		/// <param name="context">Context.</param>
+		/// <returns>Token match object.</returns>
 		private TokenMatch<TokenType> TryMatchToken(Context context) {
 			TokenPattern<TokenType> tokenPattern = null;
 			Match match = null;
 
-			// すべてのパターンを試す
+			// traverse all patterns
 			foreach (TokenPattern<TokenType> pattern in context.Patterns) {
 				match = pattern.Regex.Match(context.Text, context.Index);
-				// マッチに失敗した場合
+				// matching failed
 				if (!match.Success) {
 					continue;
 				}
-				// 先頭位置とマッチしなかった場合
+				// matching failed most front position
 				if (match.Index != context.Index) {
 					continue;
 				}
-				// 長さ 0 でマッチする場合があるので回避
+				// to avoid zero length matching
 				if (match.Length <= 0) {
 					continue;
 				}
-				// マッチした
+				// matched
 				tokenPattern = pattern;
 				break;
 			}
 
-			// マッチしなかった場合
+			// not matched
 			if (tokenPattern == null) {
 				return null;
 			}
 
-			// マッチした場合
+			// matched
 			TokenMatch<TokenType> tokenMatch = new TokenMatch<TokenType>(match.Value);
 			tokenMatch.Type = tokenPattern.Type;
 			tokenMatch.Index = context.Index;
@@ -343,14 +344,14 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// リストにトークンを追加する.
+		/// Add token to list.
 		/// </summary>
-		/// <param name="tokenList">追加先のリスト.</param>
-		/// <param name="tokenMatch">追加するマッチオブジェクト.</param>
+		/// <param name="tokenList">Target token list.</param>
+		/// <param name="tokenMatch">Match object to add.</param>
 		private void AddToken(TokenList<TokenType> tokenList, TokenMatch<TokenType> tokenMatch) {
 			tokenList.Add(tokenMatch);
 
-			// 追加後イベントを実行する
+			// dispatch event when added
 			if (TokenAdded != null) {
 				Token<TokenType> token = tokenList.Last();
 				TokenAddedEventArgs<TokenType> args
@@ -360,10 +361,10 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 指定された行番号の文字列を取得する.
+		/// Get current line text.
 		/// </summary>
-		/// <param name="context">コンテキスト.</param>
-		/// <returns>指定された行の文字列.</returns>
+		/// <param name="context">Context.</param>
+		/// <returns>line text.</returns>
 		private string GetLine(Context context) {
 			int lineNumber = context.LineNumber;
 			lineNumber--;
@@ -385,9 +386,9 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// ParseException 例外を発生させる.
+		/// Throw new ParseException.
 		/// </summary>
-		/// <param name="context">コンテキスト.</param>
+		/// <param name="context">Context.</param>
 		private void ThrowParseException(Context context) {
 			string lineText = GetLine(context);
 			ParseException exception = new ParseException(string.Format(

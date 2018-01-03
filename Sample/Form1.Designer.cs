@@ -35,7 +35,7 @@
 			this.buttonLoadCsv.Name = "buttonLoadCsv";
 			this.buttonLoadCsv.Size = new System.Drawing.Size(130, 23);
 			this.buttonLoadCsv.TabIndex = 0;
-			this.buttonLoadCsv.Text = "CSVファイルのロード";
+			this.buttonLoadCsv.Text = "Load CSV (Test)";
 			this.buttonLoadCsv.UseVisualStyleBackColor = true;
 			this.buttonLoadCsv.Click += new System.EventHandler(this.buttonLoadCsv_Click);
 			// 
@@ -55,7 +55,7 @@
 			this.buttonLoadJson.Name = "buttonLoadJson";
 			this.buttonLoadJson.Size = new System.Drawing.Size(130, 23);
 			this.buttonLoadJson.TabIndex = 2;
-			this.buttonLoadJson.Text = "JSONファイルのロード";
+			this.buttonLoadJson.Text = "Load JSON (Test)";
 			this.buttonLoadJson.UseVisualStyleBackColor = true;
 			this.buttonLoadJson.Click += new System.EventHandler(this.buttonLoadJson_Click);
 			// 

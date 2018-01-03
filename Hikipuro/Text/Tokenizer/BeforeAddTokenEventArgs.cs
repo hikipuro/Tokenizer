@@ -2,24 +2,25 @@
 
 namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
-	/// BeforeAddTokenEventHandler の引数.
+	/// Arguments of BeforeAddTokenEventHandler.
 	/// </summary>
-	/// <typeparam name="TokenType">トークンの種類.</typeparam>
+	/// <typeparam name="TokenType">Token type.</typeparam>
 	public class BeforeAddTokenEventArgs<TokenType> : EventArgs where TokenType : struct {
 		/// <summary>
-		/// トークンのマッチした場所を表すオブジェクト.
+		/// Position of token matched.
 		/// </summary>
 		public TokenMatch<TokenType> TokenMatch;
 
 		/// <summary>
-		/// リストに追加する処理をキャンセルする場合は true.
+		/// if you don't want to add matched token to list,
+		/// to set true this Cancel property.
 		/// </summary>
 		public bool Cancel = false;
 
 		/// <summary>
-		/// コンストラクタ.
+		/// Constructor.
 		/// </summary>
-		/// <param name="tokenMatch">トークンのマッチした場所を表すオブジェクト.</param>
+		/// <param name="tokenMatch">Token match object.</param>
 		public BeforeAddTokenEventArgs(TokenMatch<TokenType> tokenMatch)  {
 			this.TokenMatch = tokenMatch;
 		}

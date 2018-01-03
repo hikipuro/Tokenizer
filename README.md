@@ -11,8 +11,8 @@ This library can use with .NET Framework 2.0 or later.
 - download or clone entire this repository.
 - open "Tokeniser.sln" in your Visual Studio.
 - run this project.
-- CSV tokenize sample will be running on click "CSVファイルのロード" button.
-- JSON tokenize sample will be running on click "JSONファイルのロード" button.
+- CSV tokenize sample will be running on click "Load CSV" button.
+- JSON tokenize sample will be running on click "Load JSON" button.
 
 please use previous version Visual Studio, if you get some errors.
 - open "Tokenizer(vs2010).sln" in your Visual Studio.
@@ -52,8 +52,8 @@ please use previous version Visual Studio, if you get some errors.
 ## 使い方
 
 - Visual Studio で Tokenizer.sln を開いてください
-- "CSVファイルのロード" ボタンを押すと、CSV ファイルの分解サンプルが実行されます
-- "JSONファイルのロード" ボタンを押すと、JSON ファイルの分解サンプルが実行されます
+- "Load CSV" ボタンを押すと、CSV ファイルの分解サンプルが実行されます
+- "Load JSON" ボタンを押すと、JSON ファイルの分解サンプルが実行されます
 
 古いバージョンの Visual Studio で開く場合
 - Tokenizer(vs2010).sln を開いてください

@@ -4,43 +4,43 @@ using System.Text.RegularExpressions;
 
 namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
-	/// ステップ実行用の Tokenizer.
-	/// Tokenizer.CreateSteppingTokenizer() で作成する.
+	/// One by one Tokenizer.
+	/// This instance will created by Tokenizer.CreateSteppingTokenizer() static method.
 	/// </summary>
 	/// <typeparam name="TokenType"></typeparam>
 	public class SteppingTokenizer<TokenType> : IEnumerable<Token<TokenType>> where TokenType : struct {
 		/// <summary>
-		/// コンテキスト.
+		/// Context for tokenize.
 		/// </summary>
 		Tokenizer<TokenType>.Context context;
 
 		/// <summary>
-		/// 現在のトークン.
+		/// Current token.
 		/// </summary>
 		Token<TokenType> token;
 
 		/// <summary>
-		/// マッチしたトークンのリスト.
+		/// List of matched tokens.
 		/// </summary>
 		TokenList<TokenType> tokens;
 
 		/// <summary>
-		/// 現在のトークンを取得する.
+		/// Current token.
 		/// </summary>
 		public Token<TokenType> Current {
 			get { return token; }
 		}
 
 		/// <summary>
-		/// 次の項目があるかチェックする.
-		/// true: 次の項目がある, false: ない.
+		/// Check for tokenizer has next items.
+		/// true: have, false: not have.
 		/// </summary>
 		public bool HasNext {
 			get { return context.Index < context.Text.Length; }
 		}
 
 		/// <summary>
-		/// コンストラクタ.
+		/// Constructor.
 		/// </summary>
 		/// <param name="context"></param>
 		public SteppingTokenizer(Tokenizer<TokenType>.Context context) {
@@ -49,7 +49,7 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// デストラクタ.
+		/// Destructor.
 		/// </summary>
 		~SteppingTokenizer() {
 			token = null;
@@ -60,7 +60,7 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 処理位置をリセットする.
+		/// Reset processing position.
 		/// </summary>
 		public void Reset() {
 			context.Index = 0;
@@ -71,28 +71,28 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 次の項目を取得する.
-		/// マッチしない場合は null を返す.
+		/// Get next item.
+		/// Return null when not matched.
 		/// </summary>
-		/// <returns>トークン.</returns>
+		/// <returns>Token.</returns>
 		public Token<TokenType> Next() {
-			// 登録されたパターンでマッチを試す
+			// try to match patterns in registered patterns
 			Token<TokenType> token = TryMatchToken(context);
 
-			// マッチしなかった時は, null を返す
+			// return null when not matching
 			if (token == null) {
 				return null;
 			}
 
-			// マッチした場合
+			// pattern matched
 			tokens.Add(token);
 
-			// インデックスの位置を動かしておく
+			// move char positions
 			int matchLength = token.Length;
 			context.Index += matchLength;
 			context.LineIndex += matchLength;
 			
-			// 改行位置に到達した時
+			// when arrive on new line position
 			if (context.LineIndexList[context.LineNumber] == context.Index) {
 				context.LineIndex = 1;
 				context.LineNumber++;
@@ -103,29 +103,29 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 引数で指定した種類で, 次の項目を取得する.
-		/// マッチしない場合は null を返す.
+		/// Get next item, type of tokenType arg.
+		/// Return null when not matched.
 		/// </summary>
-		/// <param name="tokenType">トークンの種類.</param>
-		/// <returns>トークン.</returns>
+		/// <param name="tokenType">Token type.</param>
+		/// <returns>Token.</returns>
 		public Token<TokenType> Next(TokenType tokenType) {
-			// 登録されたパターンでマッチを試す
+			// try to match patterns in registered patterns
 			Token<TokenType> token = TryMatchToken(context, tokenType);
 
-			// マッチしなかった時は, null を返す
+			// return null when not matching
 			if (token == null) {
 				return null;
 			}
 
-			// マッチした場合
+			// pattern matched
 			tokens.Add(token);
 
-			// インデックスの位置を動かしておく
+			// move char positions
 			int matchLength = token.Length;
 			context.Index += matchLength;
 			context.LineIndex += matchLength;
 
-			// 改行位置に到達した時
+			// when arrive on new line position
 			if (context.LineIndexList[context.LineNumber] == context.Index) {
 				context.LineIndex = 1;
 				context.LineNumber++;
@@ -136,10 +136,10 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 処理位置をトークン 1 つ分戻す.
-		/// 1 つ前のトークンが存在しない場合は null を返す.
+		/// Back to processing point to the previous token.
+		/// Return null when the previous token does not exist.
 		/// </summary>
-		/// <returns>1 つ前のトークン.</returns>
+		/// <returns>Previous token.</returns>
 		public Token<TokenType> Back() {
 			if (token == null) {
 				context.Index = 0;
@@ -157,12 +157,12 @@ namespace Hikipuro.Text.Tokenizer {
 				return null;
 			}
 
-			// 1 つ前のトークンを取得する
+			// get the previous token
 			int position = tokens.Count - 1;
 			Token<TokenType> prevToken = tokens[position - 1];
 			tokens.RemoveAt(position);
 
-			// 処理位置を戻す
+			// back to processing point
 			context.Index = token.Index;
 			context.LineNumber = token.LineNumber;
 			context.LineIndex = token.LineIndex;
@@ -172,28 +172,28 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 次の要素が, 引数で指定した種類にマッチするかチェックする.
+		/// Check for next item will match type, type of tokenType arg.
 		/// </summary>
-		/// <param name="tokenType">トークンの種類.</param>
-		/// <returns>true: マッチした, false: マッチしない.</returns>
+		/// <param name="tokenType">Token type.</param>
+		/// <returns>true: match, false: not match.</returns>
 		public bool IsMatchNext(TokenType tokenType) {
-			// すべてのパターンを巡回する
+			// traverse all patterns
 			foreach (TokenPattern<TokenType> pattern in context.Patterns) {
-				// 種類が違う場合は飛ばす
+				// continue when don't match type
 				if (pattern.Type.Equals(tokenType) == false) {
 					continue;
 				}
 				Match match = pattern.Regex.Match(context.Text, context.Index);
 
-				// マッチに失敗した場合
+				// matching failed
 				if (!match.Success) {
 					return false;
 				}
-				// 先頭位置とマッチしなかった場合
+				// matching failed most front position
 				if (match.Index != context.Index) {
 					return false;
 				}
-				// 長さ 0 でマッチする場合があるので回避
+				// to avoid zero length matching
 				if (match.Length <= 0) {
 					return false;
 				}
@@ -203,50 +203,50 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 現在の行の文字列を取得する.
+		/// Get current line text.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>line text.</returns>
 		public string GetLine() {
 			return GetLine(context);
 		}
 
 		/// <summary>
-		/// トークンのマッチを試す.
-		/// マッチしなかった場合, null を返す.
+		/// Try to match token.
+		/// Return null when not matched.
 		/// </summary>
-		/// <param name="context">コンテキスト.</param>
-		/// <returns>トークン.</returns>
+		/// <param name="context">Context.</param>
+		/// <returns>Token.</returns>
 		private Token<TokenType> TryMatchToken(Tokenizer<TokenType>.Context context) {
 			TokenPattern<TokenType> tokenPattern = null;
 			Match match = null;
 
-			// すべてのパターンを試す
+			// traverse all patterns
 			foreach (TokenPattern<TokenType> pattern in context.Patterns) {
 				match = pattern.Regex.Match(context.Text, context.Index);
 
-				// マッチに失敗した場合
+				// matching failed
 				if (!match.Success) {
 					continue;
 				}
-				// 先頭位置とマッチしなかった場合
+				// matching failed most front position
 				if (match.Index != context.Index) {
 					continue;
 				}
-				// 長さ 0 でマッチする場合があるので回避
+				// to avoid zero length matching
 				if (match.Length <= 0) {
 					continue;
 				}
-				// マッチした
+				// matched
 				tokenPattern = pattern;
 				break;
 			}
 
-			// マッチしなかった場合
+			// not matched
 			if (tokenPattern == null) {
 				return null;
 			}
 
-			// マッチした場合
+			// matched
 			Token<TokenType> token = new Token<TokenType>(match.Value);
 			token.Type = tokenPattern.Type;
 			token.Index = context.Index;
@@ -256,48 +256,48 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 引数で指定した種類で, トークンのマッチを試す.
-		/// マッチしなかった場合, null を返す.
+		/// Try to match token, type of tokenType arg.
+		/// Return null when not matched.
 		/// </summary>
-		/// <param name="context">コンテキスト.</param>
-		/// <param name="tokenType">トークンの種類.</param>
-		/// <returns>トークン.</returns>
+		/// <param name="context">Context.</param>
+		/// <param name="tokenType">Token type.</param>
+		/// <returns>Token.</returns>
 		private Token<TokenType> TryMatchToken(Tokenizer<TokenType>.Context context, TokenType tokenType) {
 			TokenPattern<TokenType> tokenPattern = null;
 			Match match = null;
 
-			// すべてのパターンを試す
+			// traverse all patterns
 			foreach (TokenPattern<TokenType> pattern in context.Patterns) {
-				// 種類が違う場合は飛ばす
+				// continue when don't match type
 				if (pattern.Type.Equals(tokenType) == false) {
 					continue;
 				}
 
 				match = pattern.Regex.Match(context.Text, context.Index);
 
-				// マッチに失敗した場合
+				// matching failed
 				if (!match.Success) {
 					continue;
 				}
-				// 先頭位置とマッチしなかった場合
+				// matching failed most front position
 				if (match.Index != context.Index) {
 					continue;
 				}
-				// 長さ 0 でマッチする場合があるので回避
+				// to avoid zero length matching
 				if (match.Length <= 0) {
 					continue;
 				}
-				// マッチした
+				// matched
 				tokenPattern = pattern;
 				break;
 			}
 
-			// マッチしなかった場合
+			// not matched
 			if (tokenPattern == null) {
 				return null;
 			}
 
-			// マッチした場合
+			// matched
 			Token<TokenType> token = new Token<TokenType>(match.Value);
 			token.Type = tokenPattern.Type;
 			token.Index = context.Index;
@@ -307,10 +307,10 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 指定された行番号の文字列を取得する.
+		/// Get current line text.
 		/// </summary>
-		/// <param name="context">コンテキスト.</param>
-		/// <returns>指定された行の文字列.</returns>
+		/// <param name="context">Context.</param>
+		/// <returns>Line text.</returns>
 		private string GetLine(Tokenizer<TokenType>.Context context) {
 			int lineNumber = context.LineNumber;
 			lineNumber--;
@@ -332,7 +332,7 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// IEnumerable の実装.
+		/// Implement of IEnumerable interface.
 		/// </summary>
 		/// <returns></returns>
 		public IEnumerator<Token<TokenType>> GetEnumerator() {
@@ -343,7 +343,7 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// IEnumerable の実装.
+		/// Implement of IEnumerable interface.
 		/// </summary>
 		/// <returns></returns>
 		IEnumerator IEnumerable.GetEnumerator() {

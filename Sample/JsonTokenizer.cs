@@ -1,12 +1,15 @@
 ﻿using Hikipuro.Text.Tokenizer;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tokenizer.Sample {
+	/// <summary>
+	/// Sample: tokenize JSON text.
+	/// This class doesn't have to instanciate.
+	/// To use this class, call JsonTokenizer.Tokenize() static method.
+	/// </summary>
 	class JsonTokenizer {
 		/// <summary>
-		/// JSON ファイルで使用するトークンの種類.
+		/// Token type of JSON text.
+		/// Each tokenizer shoud have another TokenType enum object.
 		/// </summary>
 		public enum TokenType {
 			NewLine,
@@ -25,15 +28,15 @@ namespace Tokenizer.Sample {
 		}
 
 		/// <summary>
-		/// 渡された JSON ファイルを分解する.
+		/// Tokeninze JSON text.
 		/// </summary>
-		/// <param name="text">JSON ファイル.</param>
-		/// <returns>トークンのリスト.</returns>
+		/// <param name="text">JSON text.</param>
+		/// <returns>Token list.</returns>
 		public static TokenList<TokenType> Tokenize(string text) {
-			// Tokenizer オブジェクトを準備する
+			// prepare Tokenizer object
 			Tokenizer<TokenType> tokenizer = new Tokenizer<TokenType>();
 
-			// トークンの分解規則を追加する
+			// prepare token patterns
 			tokenizer.AddPattern(TokenType.NewLine, "\\G\r\n|\r|\n");
 			tokenizer.AddPattern(TokenType.Comma, "\\G,");
 			tokenizer.AddPattern(TokenType.Colon, "\\G:");
@@ -48,8 +51,9 @@ namespace Tokenizer.Sample {
 			tokenizer.AddPattern(TokenType.String, @"\G""((?<=\\)""|[^\r\n""])*""");
 			tokenizer.AddPattern(TokenType.Space, @"\G\s+");
 
-			// リストにトークンを追加する直前に発生するイベント
-			// - e.Cancel = true; で追加しない
+			// this event will be dispatched when the token will add to list
+			// - e.Cancel = true;
+			//   this is specify that don't add to list
 			tokenizer.BeforeAddToken += (object sender, BeforeAddTokenEventArgs<TokenType> e) => {
 				if (e.TokenMatch.Type == TokenType.NewLine) {
 					e.Cancel = true;
@@ -60,10 +64,10 @@ namespace Tokenizer.Sample {
 					return;
 				}
 
-				// 文字列にマッチした場合
+				// type matching (string)
 				if (e.TokenMatch.Type == TokenType.String) {
 					/*
-					// デバッグ用
+					// for debugging
 					Console.WriteLine(
 						"token: {0} ({1},{2}): {3}: {4}",
 						e.TokenMatch.Index,
@@ -71,17 +75,17 @@ namespace Tokenizer.Sample {
 						e.TokenMatch.Type, e.TokenMatch.Text
 					);
 					//*/
-					// 前後からダブルクォートを取り除く
+					// trim double quotes
 					//string matchText = e.TokenMatch.Text;
 					//matchText = matchText.Trim('"');
 					//e.TokenMatch.Text = matchText;
 				}
 			};
 
-			// リストにトークンを追加した直後に発生するイベント
+			// this event will be dispatched when the token was added to list
 			tokenizer.TokenAdded += (object sender, TokenAddedEventArgs<TokenType> e) => {
 				/*
-				// デバッグ用
+				// for debugging
 				Console.WriteLine(
 					"token: {0} ({1},{2}): {3}: {4}",
 					e.Token.Index,
@@ -91,10 +95,10 @@ namespace Tokenizer.Sample {
 				//*/
 			};
 
-			// トークンに分解する
+			// Tokenize
 			TokenList<TokenType> tokens = tokenizer.Tokenize(text);
 
-			// 末尾に EOF を追加して, 番兵にする場合
+			// add EOF to last of list, if you want to have list guard
 			/*
 			Token<TokenType> tokenEOF = new Token<TokenType>();
 			tokenEOF.Type = TokenType.EOF;
@@ -102,7 +106,7 @@ namespace Tokenizer.Sample {
 			//*/
 
 			/*
-			// 分解した内容を表示する (デバッグ用)
+			// show tokenized items (for debugging)
 			foreach (Token<TokenType> token in tokens) {
 				Console.WriteLine(
 					"token: ({0},{1}): {2}: {3}",

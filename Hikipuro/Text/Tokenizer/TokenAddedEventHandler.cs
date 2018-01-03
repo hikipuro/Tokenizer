@@ -1,9 +1,9 @@
 ﻿namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
-	/// リストにトークンが追加された直後に呼ばれるイベントのデリゲート.
+	/// Delegate for event, a matched token added to TokenList.
 	/// </summary>
-	/// <typeparam name="TokenType">トークンの種類.</typeparam>
-	/// <param name="sender">イベントの送信元.</param>
-	/// <param name="e">イベントの引数.</param>
+	/// <typeparam name="TokenType">Token type.</typeparam>
+	/// <param name="sender">Event sender object.</param>
+	/// <param name="e">Event args.</param>
 	public delegate void TokenAddedEventHandler<TokenType>(object sender, TokenAddedEventArgs<TokenType> e) where TokenType : struct;
 }

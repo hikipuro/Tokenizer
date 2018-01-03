@@ -3,12 +3,14 @@ using System;
 
 namespace Tokenizer.Sample {
 	/// <summary>
-	/// CSV ファイルを分解するサンプル.
-	/// インスタンスは作らず, 直接 CSVTokenizer.Tokenize() メソッドを呼ぶ.
+	/// Sample: tokenize CSV text.
+	/// This class doesn't have to instanciate.
+	/// To use this class, call CSVTokenizer.Tokenize() static method.
 	/// </summary>
 	class CSVTokenizer {
 		/// <summary>
-		/// CSV ファイルで使用するトークンの種類.
+		/// Token type of CSV text.
+		/// Each tokenizer shoud have another TokenType enum object.
 		/// </summary>
 		public enum TokenType {
 			Comma,
@@ -19,25 +21,26 @@ namespace Tokenizer.Sample {
 		}
 
 		/// <summary>
-		/// 渡された CSV ファイルを分解する.
+		/// Tokeninze CSV text.
 		/// </summary>
-		/// <param name="text">CSV ファイル.</param>
-		/// <returns>トークンのリスト.</returns>
+		/// <param name="text">CSV text.</param>
+		/// <returns>Token list.</returns>
 		public static TokenList<TokenType> Tokenize(string text) {
-			// Tokenizer オブジェクトを準備する
+			// prepare Tokenizer object
 			Tokenizer<TokenType> tokenizer = new Tokenizer<TokenType>();
 
-			// トークンの分解規則を追加する
+			// prepare token patterns
 			tokenizer.AddPattern(TokenType.Comma, "\\G,");
 			tokenizer.AddPattern(TokenType.Number, @"\G\d+[.]?\d*");
-			// - ダブルクォート内での改行を許可する文字列
+			// - in double quotes, permit to use new line
 			//tokenizer.AddPattern(TokenType.String, @"\G""((?<=\\)""|[^""])*""");
-			// - ダブルクォート内での改行を許可しない文字列
+			// - in double quotes, not permit to use new line
 			tokenizer.AddPattern(TokenType.String, @"\G""((?<=\\)""|[^\r\n""])*""");
 			tokenizer.AddPattern(TokenType.NewLine, "\\G\r\n|\r|\n");
 
-			// リストにトークンを追加する直前に発生するイベント
-			// - e.Cancel = true; で追加しない
+			// this event will be dispatched when the token will add to list
+			// - e.Cancel = true;
+			//   this is specify that don't add to list
 			tokenizer.BeforeAddToken += (object sender, BeforeAddTokenEventArgs<TokenType> e) => {
 				/*
 				if (e.TokenMatch.Type == TokenType.NewLine) {
@@ -46,10 +49,10 @@ namespace Tokenizer.Sample {
 				}
 				//*/
 
-				// 文字列にマッチした場合
+				// type matching (string)
 				if (e.TokenMatch.Type == TokenType.String) {
 					/*
-					// デバッグ用
+					// for debugging
 					Console.WriteLine(
 						"token: {0} ({1},{2}): {3}: {4}",
 						e.TokenMatch.Index,
@@ -57,17 +60,17 @@ namespace Tokenizer.Sample {
 						e.TokenMatch.Type, e.TokenMatch.Text
 					);
 					//*/
-					// 前後からダブルクォートを取り除く
+					// trim double quotes
 					string matchText = e.TokenMatch.Text;
 					matchText = matchText.Trim('"');
 					e.TokenMatch.Text = matchText;
 				}
 			};
 
-			// リストにトークンを追加した直後に発生するイベント
+			// this event will be dispatched when the token was added to list
 			tokenizer.TokenAdded += (object sender, TokenAddedEventArgs<TokenType> e) => {
 				/*
-				// デバッグ用
+				// for debugging
 				Console.WriteLine(
 					"token: {0} ({1},{2}): {3}: {4}",
 					e.Token.Index,
@@ -77,10 +80,10 @@ namespace Tokenizer.Sample {
 				//*/
 			};
 
-			// トークンに分解する
+			// Tokenize
 			TokenList<TokenType> tokens = tokenizer.Tokenize(text);
 
-			// 末尾に EOF を追加して, 番兵にする場合
+			// add EOF to last of list, if you want to have list guard
 			/*
 			Token<TokenType> tokenEOF = new Token<TokenType>();
 			tokenEOF.Type = TokenType.EOF;
@@ -88,7 +91,7 @@ namespace Tokenizer.Sample {
 			//*/
 
 			/*
-			// 分解した内容を表示する (デバッグ用)
+			// show tokenized items (for debugging)
 			foreach (Token<TokenType> token in tokens) {
 				Console.WriteLine(
 					"token: ({0},{1}): {2}: {3}",

@@ -2,30 +2,30 @@
 
 namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
-	/// トークンのマッチ用パターン.
+	/// A token matching pattern.
 	/// </summary>
-	/// <typeparam name="TokenType">トークンの種類.</typeparam>
+	/// <typeparam name="TokenType">Token type.</typeparam>
 	public class TokenPattern<TokenType> where TokenType : struct {
 		/// <summary>
-		/// トークンの種類.
+		/// Token type.
 		/// </summary>
 		public TokenType Type;
 
 		/// <summary>
-		/// マッチ用の正規表現文字列.
+		/// Regex pattern for matching.
 		/// </summary>
 		public string Pattern;
 
 		/// <summary>
-		/// Pattern の正規表現.
+		/// Regex object for matching.
 		/// </summary>
 		public Regex Regex;
 
 		/// <summary>
-		/// コンストラクタ.
+		/// Constructor.
 		/// </summary>
-		/// <param name="type">トークンの種類.</param>
-		/// <param name="pattern">マッチ用の正規表現文字列.</param>
+		/// <param name="type">Token type.</param>
+		/// <param name="pattern">Regex patern text for matching.</param>
 		public TokenPattern(TokenType type, string pattern) {
 			this.Type = type;
 			this.Pattern = pattern;
@@ -37,11 +37,11 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// コンストラクタ.
+		/// Constructor.
 		/// </summary>
-		/// <param name="type">トークンの種類.</param>
-		/// <param name="pattern">マッチ用の正規表現文字列.</param>
-		/// <param name="options">正規表現のオプション.</param>
+		/// <param name="type">Token type.</param>
+		/// <param name="pattern">Regex patern text for matching.</param>
+		/// <param name="options">Regex options.</param>
 		public TokenPattern(TokenType type, string pattern, RegexOptions options) {
 			this.Type = type;
 			this.Pattern = pattern;
@@ -49,9 +49,9 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// Pattern 文字列を正規表現に変換する.
+		/// Convet pattern text to Regex object.
 		/// </summary>
-		/// <param name="options">正規表現のオプション.</param>
+		/// <param name="options">Regex options.</param>
 		private void CompileRegex(RegexOptions options) {
 			Regex regex = new Regex(Pattern, options);
 			this.Regex = regex;

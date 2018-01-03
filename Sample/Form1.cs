@@ -14,15 +14,15 @@ namespace Tokenizer.Sample {
 		}
 
 		/// <summary>
-		/// CSV ファイルのロードボタンが押された時.
+		/// when clicked "Load CSV" button.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void buttonLoadCsv_Click(object sender, EventArgs e) {
 			// 
-			// Sample/CSV/13TOKYO.CSV を読み込む
+			// read Sample/CSV/13TOKYO.CSV file
 			// 
-			// - このファイルは郵便局のサイトからお借りしました
+			// - this file borrowed from next url
 			//   http://www.post.japanpost.jp/zipcode/dl/oogaki-zip.html
 			// 
 			StreamReader reader = new StreamReader(
@@ -32,44 +32,44 @@ namespace Tokenizer.Sample {
 			string text = reader.ReadToEnd();
 			reader.Close();
 
-			// CSV ファイルを分解する
+			// tokenize CSV
 			TokenList<CSVTokenType> tokens = null;
 			long time = Benchmark((i) => {
 				tokens = CSVTokenizer.Tokenize(text);
 			}, 1);
 			textBoxTime.Text = time + " ms";
 
-			// 分解されたトークンを巡回する
+			// traverse all tokenized tokens
 			StringBuilder stringBuilder = new StringBuilder();
 			foreach (Token<CSVTokenType> token in tokens) {
-				// 改行文字
+				// new line
 				if (token.Type == CSVTokenType.NewLine) {
 					stringBuilder.AppendLine();
 					continue;
 				}
-				// カンマ
+				// comma
 				if (token.Type == CSVTokenType.Comma) {
 					stringBuilder.Append("\t");
 					continue;
 				}
-				// 数値と文字列
+				// numbers or strings
 				stringBuilder.Append(token.Text);
 			}
 
-			// 画面に表示する
+			// show results in text box
 			textBox.Text = stringBuilder.ToString();
 		}
 
 		/// <summary>
-		/// JSON ファイルのロードボタンが押された時.
+		/// when clicked "Load JSON" button.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void buttonLoadJson_Click(object sender, EventArgs e) {
 			// 
-			// Sample/JSON/Test1.json を読み込む
+			// read Sample/JSON/Test1.json file
 			// 
-			// - このファイルは次のサイトからお借りしました
+			// - this file borrowed from next url
 			//   http://json.org/example.html
 			// 
 			StreamReader reader = new StreamReader(
@@ -79,7 +79,7 @@ namespace Tokenizer.Sample {
 			string text = reader.ReadToEnd();
 			reader.Close();
 
-			// トークンの種類分けをしておく
+			// token grouping
 			TokenTypeGroup<JsonTokenType> openBlockGroup
 				= new TokenTypeGroup<JsonTokenizer.TokenType>();
 			openBlockGroup.Add(JsonTokenType.OpenBrace);
@@ -90,38 +90,38 @@ namespace Tokenizer.Sample {
 			closeBlockGroup.Add(JsonTokenType.CloseBrace);
 			closeBlockGroup.Add(JsonTokenType.CloseBracket);
 
-			// JSON ファイルを分解する
+			// tokenize JSON text
 			TokenList<JsonTokenType> tokens = null;
 			long time = Benchmark((i) => {
 				tokens = JsonTokenizer.Tokenize(text);
 			}, 1);
 			textBoxTime.Text = time + " ms";
 
-			// 分解されたトークンを巡回する
-			// (JSON ファイルをフォーマットする)
+			// traverse all tokenized tokens
+			// (format JSON text)
 			int indentSize = 0;
 			StringBuilder stringBuilder = new StringBuilder();
 			foreach (Token<JsonTokenType> token in tokens) {
-				// コロン
+				// colon
 				if (token.IsTypeOf(JsonTokenType.Colon)) {
 					stringBuilder.Append(token.Text);
 					stringBuilder.Append(" ");
 					continue;
 				}
-				// カンマ
+				// comma
 				if (token.IsTypeOf(JsonTokenType.Comma)) {
 					stringBuilder.Append(token.Text);
 					JsonNewLine(stringBuilder, indentSize);
 					continue;
 				}
-				// 波括弧 { または 角括弧 [
+				// open brace { or open bracket [
 				if (token.IsMemberOf(openBlockGroup)) {
 					indentSize++;
 					stringBuilder.Append(token.Text);
 					JsonNewLine(stringBuilder, indentSize);
 					continue;
 				}
-				// 波括弧 } または 角括弧 ]
+				// close brace } or close bracket ]
 				if (token.IsMemberOf(closeBlockGroup)) {
 					indentSize--;
 					if (token.Next != null && token.Next.IsTypeOf(JsonTokenType.Comma)) {
@@ -132,7 +132,7 @@ namespace Tokenizer.Sample {
 					JsonNewLine(stringBuilder, indentSize - 1);
 					continue;
 				}
-				// 文字列, 数値, null, true, false
+				// strings, numbers, null, true and false
 				if (token.Next != null && token.Next.IsMemberOf(closeBlockGroup)) {
 					stringBuilder.Append(token.Text);
 					JsonNewLine(stringBuilder, indentSize - 1);
@@ -141,16 +141,16 @@ namespace Tokenizer.Sample {
 				stringBuilder.Append(token.Text);
 			}
 
-			// 画面に表示する
+			// show results in text box
 			textBox.Text = stringBuilder.ToString();
 		}
 
 		/// <summary>
-		/// StringBuilder に改行とインデントを追加する.
-		/// JSON の処理中に使用する.
+		/// Add to new line and indent to StringBuilder object.
+		/// This method used in JSON text processing.
 		/// </summary>
-		/// <param name="stringBuilder">文字を追加する StringBuilder.</param>
-		/// <param name="indentSize">インデント幅.</param>
+		/// <param name="stringBuilder">target StringBuilder.</param>
+		/// <param name="indentSize">indent width.</param>
 		private void JsonNewLine(StringBuilder stringBuilder, int indentSize) {
 			if (indentSize < 0) {
 				stringBuilder.AppendLine();
@@ -161,11 +161,11 @@ namespace Tokenizer.Sample {
 		}
 
 		/// <summary>
-		/// 実行時間を計測する.
+		/// Measure method processing time (ms).
 		/// </summary>
-		/// <param name="act"></param>
-		/// <param name="iterations"></param>
-		/// <returns></returns>
+		/// <param name="act">measure method</param>
+		/// <param name="iterations">iterations count</param>
+		/// <returns>time in milli seconds.</returns>
 		private static long Benchmark(System.Action<int> act, int iterations) {
 			if (iterations <= 0) {
 				return 0;

@@ -2,82 +2,84 @@
 
 namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
-	/// トークン 1 つ分.
+	/// One of the Token.
 	/// </summary>
-	/// <typeparam name="TokenType">トークンの種類.</typeparam>
+	/// <typeparam name="TokenType">Token type.</typeparam>
 	public class Token<TokenType> where TokenType : struct {
 		/// <summary>
-		/// トークンの種類.
+		/// Token type.
 		/// </summary>
 		public TokenType Type;
 
 		/// <summary>
-		/// マッチしたテキスト.
+		/// Matched text (regex matched).
 		/// </summary>
 		public string Text;
 
 		/// <summary>
-		/// マッチした文字列の位置.
+		/// Char index of matched text (in entire text).
 		/// </summary>
 		public int Index;
 
 		/// <summary>
-		/// マッチした文字列の行番号.
+		/// Line number of matched text.
 		/// </summary>
 		public int LineNumber;
 
 		/// <summary>
-		/// 行の文字位置.
+		/// Char index of matched line.
 		/// </summary>
 		public int LineIndex;
 
 		/// <summary>
-		/// 追加されたリスト.
+		/// This Token in this TokenList.
 		/// </summary>
 		public TokenList<TokenType> TokenList;
 
 		/// <summary>
-		/// タグ.
-		/// ユーザー側でトークンに目印を付けるために使用する.
-		/// ライブラリ側では値をセットしない.
+		/// Tag.
+		/// You can set a any value or object freely for set a mark.
+		/// This library don't care this Tag value.
 		/// </summary>
 		public object Tag;
 
 		/// <summary>
-		/// 加工前のマッチした文字列.
+		/// Matched text (before processing).
 		/// </summary>
 		string rawText;
 
 		/// <summary>
-		/// 加工前のマッチした文字列 (読み取り専用).
+		/// Matched text (before processing).
 		/// </summary>
 		public string RawText {
 			get { return rawText; }
 		}
 
 		/// <summary>
-		/// マッチしたテキストの長さ.
+		/// Matched text length (char count).
 		/// </summary>
 		public int Length {
 			get { return Text.Length; }
 		}
 
 		/// <summary>
-		/// Index + Length の位置.
+		/// Position of Index + Length.
 		/// </summary>
 		public int RightIndex {
 			get { return Index + Text.Length; }
 		}
 
 		/// <summary>
-		/// LineIndex + Length の位置.
+		/// Position of LineIndex + Length.
 		/// </summary>
 		public int RightLineIndex {
 			get { return LineIndex + Text.Length; }
 		}
 
 		/// <summary>
-		/// このトークンが, リスト内の最後の要素かチェックする.
+		/// Check for this token is last item in TokenList.
+		/// true: last item.
+		/// false: not last item.
 		/// </summary>
 		public bool IsLast {
 			get {
@@ -89,9 +91,10 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 1 つ次の要素を取得する.
+		/// Get next item in TokenList.
+		/// null: next item is empty.
 		/// </summary>
-		/// <returns>1 つ次の要素.</returns>
+		/// <returns>Next item.</returns>
 		public Token<TokenType> Next {
 			get {
 				if (TokenList == null) {
@@ -102,9 +105,9 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 1 つ前の要素を取得する.
+		/// Get previous item in TokenList.
 		/// </summary>
-		/// <returns>1 つ前の要素.</returns>
+		/// <returns>Previous item.</returns>
 		public Token<TokenType> Prev {
 			get {
 				if (TokenList == null) {
@@ -115,10 +118,10 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// TokenMatch オブジェクトから Token オブジェクトを作成する.
+		/// Create Token object from TokenMatch object.
 		/// </summary>
-		/// <param name="tokenMatch">作成元の TokenMatch オブジェクト.</param>
-		/// <returns>Token オブジェクト.</returns>
+		/// <param name="tokenMatch">TokenMatch object (base).</param>
+		/// <returns>Token object (created).</returns>
 		public static Token<TokenType> FromTokenMatch(TokenMatch<TokenType> tokenMatch) {
 			Token<TokenType> token = new Token<TokenType>(tokenMatch.RawText);
 			token.Type = tokenMatch.Type;
@@ -130,22 +133,22 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// コンストラクタ.
+		/// Constructor.
 		/// </summary>
 		public Token() {
 		}
 
 		/// <summary>
-		/// コンストラクタ.
+		/// Constructor.
 		/// </summary>
-		/// <param name="text">マッチした文字列.</param>
+		/// <param name="text">Matched text.</param>
 		public Token(string text) {
 			rawText = text;
 			this.Text = text;
 		}
 
 		/// <summary>
-		/// デストラクタ.
+		/// Destructor.
 		/// </summary>
 		~Token() {
 			TokenList = null;
@@ -153,19 +156,19 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// このトークンが, 引数で指定された種類と一致するかチェックする.
+		/// Check for this token is same type passed in tokenType arg.
 		/// </summary>
-		/// <param name="tokenType">トークンの種類.</param>
-		/// <returns>true: 一致, false: 一致しない.</returns>
+		/// <param name="tokenType">Token type.</param>
+		/// <returns>true: same, false: not same.</returns>
 		public bool IsTypeOf(TokenType tokenType) {
 			return Type.Equals(tokenType);
 		}
 
 		/// <summary>
-		/// このトークンが, 引数で指定されたグループに属するかチェックする.
+		/// Check for this token is within a group passed in tokenTypeGroup arg.
 		/// </summary>
-		/// <param name="tokenTypeGroup">チェックするグループ.</param>
-		/// <returns>true: 属している, false: 属していない.</returns>
+		/// <param name="tokenTypeGroup">Token type group.</param>
+		/// <returns>true: within, false: not within.</returns>
 		public bool IsMemberOf(TokenTypeGroup<TokenType> tokenTypeGroup) {
 			if (tokenTypeGroup == null) {
 				return false;
@@ -174,37 +177,38 @@ namespace Hikipuro.Text.Tokenizer {
 		}
 
 		/// <summary>
-		/// 開始位置同士の距離を文字数で取得する.
+		/// Get distance in char count, compare this token and another token.
+		/// This method compares start position.
 		/// </summary>
-		/// <param name="token">比較用のトークン.</param>
-		/// <returns>文字数.</returns>
+		/// <param name="token">Token used for compare.</param>
+		/// <returns>Char count.</returns>
 		public int GetDistance(Token<TokenType> token) {
 			return Math.Abs(Index - token.Index);
 		}
 
 		/// <summary>
-		/// このトークンの位置が, 引数で指定されたトークンよりも前にあるかチェックする.
+		/// Check for this token position is front of the another token.
 		/// </summary>
-		/// <param name="token">比較用のトークン.</param>
-		/// <returns>true: 前にある, false: 後ろにある.</returns>
+		/// <param name="token">Token used for compare.</param>
+		/// <returns>true: before, false: after.</returns>
 		public bool IsBefore(Token<TokenType> token) {
 			return Index < token.Index;
 		}
 
 		/// <summary>
-		/// このトークンの位置が, 引数で指定されたトークンよりも後にあるかチェックする.
+		/// Check for this token position is back of the another token.
 		/// </summary>
-		/// <param name="token">比較用のトークン.</param>
-		/// <returns>true: 後ろにある, false: 前にある.</returns>
+		/// <param name="token">Token used for compare.</param>
+		/// <returns>true: after, false: before.</returns>
 		public bool IsAfter(Token<TokenType> token) {
 			return Index > token.Index;
 		}
 
 		/// <summary>
-		/// このトークンの位置が, 引数で指定されたトークンと隣接しているかチェックする.
+		/// Check for this token position is adjacent of the another token.
 		/// </summary>
-		/// <param name="token">比較用のトークン.</param>
-		/// <returns>true: 隣接している, false: 隣接していない.</returns>
+		/// <param name="token">Token used for compare.</param>
+		/// <returns>true: adjacent, false: not adjacent.</returns>
 		public bool IsNeighbor(Token<TokenType> token) {
 			if (this.IsBefore(token)) {
 				return Index + RawText.Length == token.Index;

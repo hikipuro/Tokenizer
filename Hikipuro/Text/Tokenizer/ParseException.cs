@@ -2,39 +2,39 @@
 
 namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
-	/// Tokenizer のパースエラー.
-	/// Tokenizer.Tokenize() で使用する.
+	/// Tokenizer parse error.
+	/// This object used in Tokenizer.Tokenize() method.
 	/// </summary>
 	public class ParseException : ApplicationException {
 		/// <summary>
-		/// 処理対象の文字列.
+		/// Processing target Text.
 		/// </summary>
 		public string Text;
 
 		/// <summary>
-		/// エラーの発生した行の文字列.
+		/// A line text of location of the error.
 		/// </summary>
 		public string LineText;
 
 		/// <summary>
-		/// 処理中の文字位置.
+		/// Processing target char index.
 		/// </summary>
 		public int Index;
 
 		/// <summary>
-		/// 処理中の行番号.
+		/// Processing target line number.
 		/// </summary>
 		public int LineNumber;
 
 		/// <summary>
-		/// 処理中の行の文字位置.
+		/// Char index of the line.
 		/// </summary>
 		public int LineIndex;
 
 		/// <summary>
-		/// コンストラクタ.
+		/// Constructor.
 		/// </summary>
-		/// <param name="message">エラーメッセージ.</param>
+		/// <param name="message">Error message.</param>
 		public ParseException(string message) : base(message) {
 		}
 	}

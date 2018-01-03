@@ -4,7 +4,7 @@ using System.Windows.Forms;
 namespace Tokenizer.Sample {
 	static class Program {
 		/// <summary>
-		/// アプリケーションのメイン エントリ ポイントです。
+		/// App entry point.
 		/// </summary>
 		[STAThread]
 		static void Main() {

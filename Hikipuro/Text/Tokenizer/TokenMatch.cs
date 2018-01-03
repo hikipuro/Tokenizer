@@ -2,63 +2,64 @@
 
 namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
-	/// トークンのマッチした場所.
+	/// Position of token matched.
+	/// Represent for matched position and text.
 	/// </summary>
-	/// <typeparam name="TokenType">トークンの種類.</typeparam>
+	/// <typeparam name="TokenType">Token type.</typeparam>
 	public class TokenMatch<TokenType> where TokenType : struct {
 		/// <summary>
-		/// トークンの種類.
+		/// Token type.
 		/// </summary>
 		public TokenType Type;
 
 		/// <summary>
-		/// マッチした文字列.
-		/// BeforeAddToken イベントの中で修正できる.
+		/// Matched text.
+		/// This text can revise in BeforeAddToken event.
 		/// </summary>
 		public string Text;
 
 		/// <summary>
-		/// マッチした文字列の位置.
+		/// Char index of matched text (in entire text).
 		/// </summary>
 		public int Index;
 
 		/// <summary>
-		/// マッチした文字列の行番号.
+		/// Line number of matched text.
 		/// </summary>
 		public int LineNumber;
 
 		/// <summary>
-		/// 行の文字位置.
+		/// Char index of matched line.
 		/// </summary>
 		public int LineIndex;
 
 		/// <summary>
-		/// マッチした時に使用した, 正規表現の Match オブジェクト.
+		/// Regex Match object when used matching.
 		/// </summary>
 		public Match Match;
 
 		/// <summary>
-		/// 加工前のマッチした文字列.
+		/// Matched text (before processing).
 		/// </summary>
 		string rawText;
 
 		/// <summary>
-		/// 加工前のマッチした文字列 (読み取り専用).
+		/// Matched text (before processing).
 		/// </summary>
 		public string RawText {
 			get { return rawText; }
 		}
 
 		/// <summary>
-		/// コンストラクタ.
+		/// Constructor.
 		/// </summary>
 		public TokenMatch() {
 		}
 
 		/// <summary>
-		/// コンストラクタ.
+		/// Constructor.
 		/// </summary>
-		/// <param name="text">マッチした文字列.</param>
+		/// <param name="text">Matched text.</param>
 		public TokenMatch(string text) {
 			rawText = text;
 			this.Text = text;

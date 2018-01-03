@@ -2,9 +2,9 @@
 
 namespace Hikipuro.Text.Tokenizer {
 	/// <summary>
-	/// トークンの種類のグループ.
+	/// A token type group.
 	/// </summary>
-	/// <typeparam name="TokenType">トークンの種類.</typeparam>
+	/// <typeparam name="TokenType">Token type.</typeparam>
 	public class TokenTypeGroup<TokenType> : List<TokenType> where TokenType : struct {
 	}
 }
