@@ -127,7 +127,7 @@ namespace Hikipuro.Text.Tokenizer {
 		/// </summary>
 		/// <param name="type">Token type.</param>
 		/// <param name="patternText">Regex pattern text.</param>
-		/// <param name="options">正規表現のオプション.</param>
+		/// <param name="options">Regex options.</param>
 		/// <returns>Added pattern object.</returns>
 		public TokenPattern<TokenType> AddPattern(TokenType type, string patternText, RegexOptions options) {
 			if (patternText == null || patternText == string.Empty) {
